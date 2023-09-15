@@ -17,3 +17,25 @@ class Accessories:
                 print(BLUE + text + RESET, end = "")
     def printSL(self, text, sep, end = ""):
         print(text, sep, end)
+    
+    def mapXCoordsToChessXCoords(self, x):
+        chessXCoords = ""
+        mapXCords = {char: index for index, char in enumerate('abcdefgh', start=1)}
+        chessXCoords += str(mapXCords[x])
+        return chessXCoords
+    
+    def mapYCoordsToChessYCoords(self, y):
+        chessYCoords = ""
+        mapYCords = {i : 8 - i for i in range(8)}
+        chessYCoords += str(mapYCords[y])
+
+        return chessYCoords
+
+    def mapCoordsToChessCoords(self, x, y):
+        # chessCoords = ""
+        # mapXCords = {char: index for index, char in enumerate('abcdefgh', start=1)}
+        # mapYCords = {8-i:i for i in range(8)}
+        # chessCoords += mapYCords[coord.y]
+        # chessCord += mapXCords[coord.x]
+
+        return self.mapXCoordsToChessXCoords(x) + self.mapYCoordsToChessYCoords(y)
