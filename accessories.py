@@ -5,6 +5,17 @@ BLUE = '\033[94m'
 RESET = '\033[0m'
 
 class Accessories:
+
+    def __init__(self):
+        self.pieceValue = {
+            "pawn" : 1,
+            "knight" : 3,
+            "bishop" : 3,
+            "rook" : 5,
+            "queen" : 9,
+            "king" : 1000
+        }
+        
     def printInColor(self, text, color):
         match color.lower():
             case "r":
@@ -39,3 +50,6 @@ class Accessories:
         # chessCord += mapXCords[coord.x]
 
         return self.mapXCoordsToChessXCoords(x) + self.mapYCoordsToChessYCoords(y)
+
+    def getPieceWeightage(self, piece):
+        return self.pieceValue[piece]
