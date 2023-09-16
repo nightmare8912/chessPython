@@ -1,0 +1,2 @@
+myList = []
+print(len(myList))

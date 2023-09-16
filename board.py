@@ -1,12 +1,15 @@
 import coordinates
 import pieces as pie
 import accessories
+import copy
+import sys
 
 class Board:
     def __init__(self):
-        # self.piece = pie.Pieces("", "", coordinates.Coordinates(-1, -1))
+        sys.setrecursionlimit(10000)
         self.positions = [[pie.Pieces("", "", coordinates.Coordinates(-1, -1), 0) for _ in range(8)] for _ in range(8)]
         self.initializeBoard()
+        self.movesLog = []
 
     def initializeBoard(self):
         self.placePawns(6, "white")
@@ -17,7 +20,7 @@ class Board:
     def placePawns(self, row, color):
         for j in range(8):
             self.positions[row][j] = pie.Pieces("pawn", color, coordinates.Coordinates(row, j), 0)
-    
+
     def placePiecesOtherThanPawns(self, row, color):
         for j in range(8):
             if (j == 0 or j == 7):
@@ -56,7 +59,6 @@ class Board:
             accs.printInColor(str(i) + "\t", "b")
         print("\n")
         for point in moves:
-                # print("lololol value is ", self.positions[point.x][point.y])
                 if self.positions[point.x][point.y].pieceType == "":
                     self.positions[point.x][point.y].pieceType = "X"
         for i in range(8):
@@ -80,3 +82,25 @@ class Board:
 
     def getPieceAt(self, coord):
         return self.positions[coord.x][coord.y]
+    
+    def logMoves(self, src, dest):
+        self.movesLog.append([copy.deepcopy(self.positions[src.x][src.y]), copy.deepcopy(self.positions[dest.x][dest.y])])
+
+    def movePiece(self, src, dest):
+
+        self.positions[src.x][src.y].timesMoved += 1
+        self.logMoves(src, dest)
+        self.positions[dest.x][dest.y] = copy.deepcopy(self.positions[src.x][src.y])
+        self.positions[src.x][src.y].pieceType = ""
+        self.positions[src.x][src.y].pieceColor = ""
+        self.positions[src.x][src.y].timesMoved = 0
+    
+    def revertMove(self, src, dest):
+
+        lastMovements = self.movesLog.pop()
+        pieceEliminated = lastMovements.pop()
+        pieceMoved = lastMovements.pop()
+
+        self.positions[dest.x][dest.y] = copy.deepcopy(pieceEliminated)
+        self.positions[src.x][src.y] = copy.deepcopy(pieceMoved)
+        self.positions[src.x][src.y].timesMoved -= 1
