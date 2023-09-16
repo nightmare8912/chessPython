@@ -1,2 +1,0 @@
-myList = []
-print(len(myList))

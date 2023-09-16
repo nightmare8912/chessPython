@@ -40,6 +40,21 @@ class Play:
         self.error = "Please chose a valid position to move"
         return False
 
+    def isMate(self):
+        allPossibleMoves = []
+        coord = coordinates.Coordinates(-1, -1)
+        for i in range(8):
+            for j in range(8):
+                if (len(allPossibleMoves) > 0):
+                    return False
+                coord.assignValue(i, j)
+                if (self.board.getPieceAt(coord).pieceColor == self.turn):
+                    if (len(self.movements.getPossibleMoves(coord)) != 0):
+                        allPossibleMoves.append(self.movements.getPossibleMoves(coord))
+        
+        return True
+
+
     def startPlaying(self):
         
         src = coordinates.Coordinates(-1, -1)
@@ -47,6 +62,11 @@ class Play:
 
         while(True):
             self.board.drawBoard()
+            if (self.isMate()):
+                print()
+                self.accs.printInColor("\nThe game is over and " + self.getOppositeTurn(self.turn) + " has won!!\n", "g")
+                print()
+                break
             print("\n\nIts ", self.turn, "'s turn to move\n\n")
             src.x = int(input("Enter x pos of piece to move: "))
             src.y = int(input("Enter y pos of piece to move: "))

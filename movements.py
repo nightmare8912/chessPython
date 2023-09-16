@@ -15,24 +15,24 @@ class Movements:
 
     def getAllPossibleMoves(self, src):
         # all possible moves with that piece, but check is not considered
-        allMovesWithoutCheck = []
+        allMovesWithCheck = []
 
         if (self.board.getPieceAt(src).pieceType == "pawn"):
-            allMovesWithoutCheck = self.pawnMovements(src)
+            allMovesWithCheck = self.pawnMovements(src)
         elif (self.board.getPieceAt(src).pieceType == "rook"):
-            allMovesWithoutCheck = self.rookMovements(src)
+            allMovesWithCheck = self.rookMovements(src)
         elif (self.board.getPieceAt(src).pieceType == "knight"):
-            allMovesWithoutCheck = self.knightMovements(src)
+            allMovesWithCheck = self.knightMovements(src)
         elif (self.board.getPieceAt(src).pieceType == "bishop"):
-            allMovesWithoutCheck = self.bishopMovements(src)
+            allMovesWithCheck = self.bishopMovements(src)
         elif (self.board.getPieceAt(src).pieceType == "king"):
-            allMovesWithoutCheck = self.kingMovements(src)
+            allMovesWithCheck = self.kingMovements(src)
         elif (self.board.getPieceAt(src).pieceType == "queen"):
-            allMovesWithoutCheck = self.queenMovements(src)
+            allMovesWithCheck = self.queenMovements(src)
         else:
             print("match not found, as piecetype = ", self.board.getPieceAt(src).pieceType)
         
-        return allMovesWithoutCheck
+        return allMovesWithCheck
 
     def getPossibleMoves(self, src):
         # all possible moves with that piece, but check is not considered
@@ -325,11 +325,5 @@ class Movements:
         return coordinates.Coordinates(-1, -1)
 
     def isCheck(self, kingPos):
-        if (len(self.getThreatsAt(kingPos)) != 0):
-            # for i in self.getThreatsAt(kingPos):
-            #     i.printCoordinates()
-            # self.acs.printInColor("\ntrue was returned", 'r')
-            return True
-        # self.acs.printInColor("\nfalse was returned", "g")
-        return False
+        return (len(self.getThreatsAt(kingPos)) != 0)
         
