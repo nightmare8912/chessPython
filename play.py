@@ -124,7 +124,7 @@ class Play:
                     self.accs.printInColor(self.error, 'r')
                     continue
             else:
-                src, dest = self.engine.generateMove("black")
+                src, dest = self.engine.generateMove(self.getOppositeTurn(selectedColor))
                 # print(f"returned src was {self.board.getPieceAt(src).pieceColor}'s {self.board.getPieceAt(src).pieceType}")
                 # print(f"returned dest was calculated for {self.board.getPieceAt(dest).pieceColor}'s {self.board.getPieceAt(dest).pieceType}")
                 self.board.movePiece(src, dest)

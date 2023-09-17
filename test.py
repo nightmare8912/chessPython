@@ -1,11 +1,4 @@
-import accessories as acs
-
-ac = acs.Accessories()
-
-# print(ac.getPieceWeightage('rook'))
-
-
-mystr = "hello"
-print(len(mystr), end = "")
-ac.printSpaces(6)
-print(mystr)
+a = b = 5
+b = 6
+print(a)
+print(b)
