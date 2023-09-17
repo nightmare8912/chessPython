@@ -2,7 +2,7 @@ import board as bd
 import movements as mv
 import coordinates
 import accessories
-import engine as eng
+from ai import engine as eng
 import sys
 class Play:
     def __init__(self):
@@ -11,7 +11,6 @@ class Play:
         self.board = bd.Board()
         self.movements = mv.Movements(self.board)
         self.accs = accessories.Accessories()
-        self.engine = eng.Engine(self.board, self.movements)
         self.error = ""
     
     # !!!!!dont make turn in this function as global!!!!!
@@ -92,6 +91,9 @@ class Play:
 
         src = coordinates.Coordinates(-1, -1)
         dest = coordinates.Coordinates(-1, -1)
+
+        selectedColor = input("Please enter your color: ").lower()
+        self.engine = eng.Engine(self.board, self.movements, self.getOppositeTurn(selectedColor))
         while(True):
             self.board.drawBoard()
             if (self.isMate()):
@@ -101,8 +103,7 @@ class Play:
                 break
             print("\n\nIts ", self.turn, "'s turn to move\n\n")
 
-            # white --> human, black --> computer
-            if (self.turn == "white"):
+            if (self.turn == selectedColor):
                 src.x = int(input("Enter x pos of piece to move: "))
                 src.y = int(input("Enter y pos of piece to move: "))
 
@@ -123,7 +124,7 @@ class Play:
                     self.accs.printInColor(self.error, 'r')
                     continue
             else:
-                src, dest = self.engine.generateMove()
+                src, dest = self.engine.generateMove("black")
                 # print(f"returned src was {self.board.getPieceAt(src).pieceColor}'s {self.board.getPieceAt(src).pieceType}")
                 # print(f"returned dest was calculated for {self.board.getPieceAt(dest).pieceColor}'s {self.board.getPieceAt(dest).pieceType}")
                 self.board.movePiece(src, dest)

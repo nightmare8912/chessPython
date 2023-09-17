@@ -53,3 +53,7 @@ class Accessories:
 
     def getPieceWeightage(self, piece):
         return self.pieceValue[piece]
+    
+    def printSpaces(self, n):
+        for i in range(n):
+            print(" ", end = "")

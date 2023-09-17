@@ -1,14 +1,11 @@
-# import accessories as acs
+import accessories as acs
 
-# ac = acs.Accessories()
+ac = acs.Accessories()
 
 # print(ac.getPieceWeightage('rook'))
 
 
-
-def myFn():
-    return 3, 4
-
-a, b = myFn()
-print(a)
-print(b)
+mystr = "hello"
+print(len(mystr), end = "")
+ac.printSpaces(6)
+print(mystr)

@@ -10,6 +10,7 @@ class Board:
         self.positions = [[pie.Pieces("", "", coordinates.Coordinates(-1, -1), 0) for _ in range(8)] for _ in range(8)]
         self.initializeBoard()
         self.movesLog = []
+        self.accs = accessories.Accessories()
 
     def initializeBoard(self):
         self.placePawns(6, "white")
@@ -34,48 +35,116 @@ class Board:
             elif (j == 4):
                 self.positions[row][j] = pie.Pieces("queen", color, coordinates.Coordinates(row, j), 0)
 
-    def drawBoard(self):
-        accs = accessories.Accessories()
-        print("\n")
-        for i in range(8):
-            accs.printInColor(str(i) + "\t", "b")
-        print("\n")
-        for i in range(8):
-            for j in range(9):
-                if (j != 8):
-                    if (self.positions[i][j].pieceColor == "black"):
-                        accs.printInColor(self.positions[i][j].pieceType + "\t", "r")
-                    else:
-                        print(self.positions[i][j].pieceType + "\t", end = "")
-                else:
-                    accs.printInColor(str(i), "b")
-                accs.printInColor("", "w")
-            print("\n")
+    # def drawBoard(self):
+    #     accs = accessories.Accessories()
+    #     print("\n")
+    #     for i in range(8):
+    #         accs.printInColor(str(i) + "\t", "b")
+    #     print("\n")
+    #     for i in range(8):
+    #         for j in range(9):
+    #             if (j != 8):
+    #                 if (self.positions[i][j].pieceColor == "black"):
+    #                     accs.printInColor(self.positions[i][j].pieceType + "\t", "r")
+    #                 else:
+    #                     print(self.positions[i][j].pieceType + "\t", end = "")
+    #             else:
+    #                 accs.printInColor(str(i), "b")
+    #             accs.printInColor("", "w")
+    #         print("\n")
+
+    # def drawBoardWithMoves(self, moves):
+    #     accs = accessories.Accessories()
+    #     print("\n")
+    #     for i in range(8):
+    #         accs.printInColor(str(i) + "\t", "b")
+    #     print("\n")
+    #     for point in moves:
+    #             if self.positions[point.x][point.y].pieceType == "":
+    #                 self.positions[point.x][point.y].pieceType = "X"
+    #     for i in range(8):
+    #         for j in range(9):
+    #             if (j != 8):
+    #                 if (self.positions[i][j].pieceColor == "black"):
+    #                     accs.printInColor(self.positions[i][j].pieceType + "\t", "r")
+    #                 elif(self.positions[i][j].pieceType == "white"):
+    #                     print(self.positions[i][j].pieceType + "\t", end = "")
+    #                 elif(self.positions[i][j].pieceType == "X"):
+    #                     accs.printInColor(self.positions[i][j].pieceType + "\t", "g")
+    #                 else:
+    #                     print(self.positions[i][j].pieceType + "\t", end = "")
+    #             else:
+    #                 accs.printInColor(str(i), "b")
+    #             accs.printInColor("", "w")
+    #         print("\n")
+    #     for point in moves:
+    #             if self.positions[point.x][point.y].pieceType == "X":
+    #                 self.positions[point.x][point.y].pieceType = ""
 
     def drawBoardWithMoves(self, moves):
-        accs = accessories.Accessories()
         print("\n")
-        for i in range(8):
-            accs.printInColor(str(i) + "\t", "b")
-        print("\n")
+        for _ in range(9):
+            self.accs.printInColor("+", 'b')
+            for _ in range(6):
+                self.accs.printInColor("-", 'b')
+        self.accs.printInColor("+", 'b')
+        print()
         for point in moves:
                 if self.positions[point.x][point.y].pieceType == "":
                     self.positions[point.x][point.y].pieceType = "X"
         for i in range(8):
             for j in range(9):
+                if (j == 0):
+                    self.accs.printInColor("|", 'b')
                 if (j != 8):
                     if (self.positions[i][j].pieceColor == "black"):
-                        accs.printInColor(self.positions[i][j].pieceType + "\t", "r")
-                    elif(self.positions[i][j].pieceType == "white"):
-                        print(self.positions[i][j].pieceType + "\t", end = "")
-                    elif(self.positions[i][j].pieceType == "X"):
-                        accs.printInColor(self.positions[i][j].pieceType + "\t", "g")
+                        self.accs.printInColor(self.positions[i][j].pieceType, "r")
+                        self.accs.printSpaces(6 - len(self.positions[i][j].pieceType))
+                        # self.accs.printInColor(str(len(self.positions[i][j].pieceType)), 'g')
+                        self.accs.printInColor("|", 'b')
+                    elif (self.positions[i][j].pieceColor == "white"):
+                        print(self.positions[i][j].pieceType, end = "")
+                        self.accs.printSpaces(6 - len(self.positions[i][j].pieceType))
+                        self.accs.printInColor("|", 'b')
+                    elif (self.positions[i][j].pieceType == "X"):
+                        self.accs.printInColor(self.positions[i][j].pieceType, 'g')
+                        self.accs.printSpaces(6 - len(self.positions[i][j].pieceType))
+                        self.accs.printInColor("|", 'b')
                     else:
-                        print(self.positions[i][j].pieceType + "\t", end = "")
+                        print(self.positions[i][j].pieceType, end = "")
+                        self.accs.printSpaces(6)
+                        self.accs.printInColor("|", 'b')
                 else:
-                    accs.printInColor(str(i), "b")
-                accs.printInColor("", "w")
-            print("\n")
+                    self.accs.printSpaces(3)
+                    self.accs.printInColor(str(i), "y")
+                    self.accs.printSpaces(2)
+                    self.accs.printInColor("|", 'b')
+                self.accs.printInColor("", "w")
+            print()
+            for _ in range(9):
+                self.accs.printInColor("+", 'b')
+                for _ in range(6):
+                    self.accs.printInColor("-", 'b')
+            self.accs.printInColor("+", 'b')
+            if i != 7:
+                print()
+        print()
+        for i in range(10):
+            if (i != 9):
+                self.accs.printInColor("|", 'b')
+                self.accs.printSpaces(3)
+                self.accs.printInColor(str(i), 'y')
+                self.accs.printSpaces(2)
+            else:
+                self.accs.printInColor("|", 'b')
+        print()
+        for _ in range(9):
+            self.accs.printInColor("+", 'b')
+            for _ in range(6):
+                self.accs.printInColor("-", 'b')
+        self.accs.printInColor("+", 'b')
+        print()
+        print("\n")
         for point in moves:
                 if self.positions[point.x][point.y].pieceType == "X":
                     self.positions[point.x][point.y].pieceType = ""
@@ -104,3 +173,61 @@ class Board:
         self.positions[dest.x][dest.y] = copy.deepcopy(pieceEliminated)
         self.positions[src.x][src.y] = copy.deepcopy(pieceMoved)
         self.positions[src.x][src.y].timesMoved -= 1
+
+    def drawBoard(self):
+        print("\n")
+        for _ in range(9):
+            self.accs.printInColor("+", 'b')
+            for _ in range(6):
+                self.accs.printInColor("-", 'b')
+        self.accs.printInColor("+", 'b')
+        print()
+        for i in range(8):
+            for j in range(9):
+                if (j == 0):
+                    self.accs.printInColor("|", 'b')
+                if (j != 8):
+                    if (self.positions[i][j].pieceColor == "black"):
+                        self.accs.printInColor(self.positions[i][j].pieceType, "r")
+                        self.accs.printSpaces(6 - len(self.positions[i][j].pieceType))
+                        # self.accs.printInColor(str(len(self.positions[i][j].pieceType)), 'g')
+                        self.accs.printInColor("|", 'b')
+                    elif (self.positions[i][j].pieceColor == "white"):
+                        print(self.positions[i][j].pieceType, end = "")
+                        self.accs.printSpaces(6 - len(self.positions[i][j].pieceType))
+                        self.accs.printInColor("|", 'b')
+                    else:
+                        print(self.positions[i][j].pieceType, end = "")
+                        self.accs.printSpaces(6)
+                        self.accs.printInColor("|", 'b')
+                else:
+                    self.accs.printSpaces(3)
+                    self.accs.printInColor(str(i), "y")
+                    self.accs.printSpaces(2)
+                    self.accs.printInColor("|", 'b')
+                self.accs.printInColor("", "w")
+            print()
+            for _ in range(9):
+                self.accs.printInColor("+", 'b')
+                for _ in range(6):
+                    self.accs.printInColor("-", 'b')
+            self.accs.printInColor("+", 'b')
+            if i != 7:
+                print()
+        print()
+        for i in range(10):
+            if (i != 9):
+                self.accs.printInColor("|", 'b')
+                self.accs.printSpaces(3)
+                self.accs.printInColor(str(i), 'y')
+                self.accs.printSpaces(2)
+            else:
+                self.accs.printInColor("|", 'b')
+        print()
+        for _ in range(9):
+            self.accs.printInColor("+", 'b')
+            for _ in range(6):
+                self.accs.printInColor("-", 'b')
+        self.accs.printInColor("+", 'b')
+        print()
+        print("\n")
