@@ -14,9 +14,9 @@ class Evaluator:
         for i in range(8):
             for j in range(8):
                 coord.assignValue(i, j)
-                if (self.board.getPieceAt(i, j).pieceColor == "black"):
+                if (self.board.getPieceAt(coord).pieceColor == "black"):
                     blackScore += self.accs.getPieceWeightage(self.board.getPieceAt(coord).pieceType)
-                elif(self.board.getPieceAt(i, j).pieceColor == "white"):
+                elif(self.board.getPieceAt(coord).pieceColor == "white"):
                     whiteScore += self.accs.getPieceWeightage(self.board.getPieceAt(coord).pieceType)
 
         return whiteScore - blackScore

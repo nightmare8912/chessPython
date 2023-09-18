@@ -39,6 +39,7 @@ class Board:
 
     def drawBoardWithMoves(self, moves):
         print("\n")
+        self.accs.printSpaces(20)
         for _ in range(9):
             self.accs.printInColor("+", 'b')
             for _ in range(6):
@@ -49,6 +50,7 @@ class Board:
                 if self.positions[point.x][point.y].pieceType == "":
                     self.positions[point.x][point.y].pieceType = "X"
         for i in range(8):
+            self.accs.printSpaces(20)
             for j in range(9):
                 if (j == 0):
                     self.accs.printInColor("|", 'b')
@@ -78,6 +80,7 @@ class Board:
                     self.accs.printInColor("|", 'b')
                 self.accs.printInColor("", "w")
             print()
+            self.accs.printSpaces(20)
             for _ in range(9):
                 self.accs.printInColor("+", 'b')
                 for _ in range(6):
@@ -86,6 +89,7 @@ class Board:
             if i != 7:
                 print()
         print()
+        self.accs.printSpaces(20)
         for i in range(10):
             if (i != 9):
                 self.accs.printInColor("|", 'b')
@@ -95,6 +99,7 @@ class Board:
             else:
                 self.accs.printInColor("|", 'b')
         print()
+        self.accs.printSpaces(20)
         for _ in range(9):
             self.accs.printInColor("+", 'b')
             for _ in range(6):
@@ -133,6 +138,7 @@ class Board:
 
     def drawBoard(self):
         print("\n")
+        self.accs.printSpaces(20)
         for _ in range(9):
             self.accs.printInColor("+", 'b')
             for _ in range(6):
@@ -140,6 +146,7 @@ class Board:
         self.accs.printInColor("+", 'b')
         print()
         for i in range(8):
+            self.accs.printSpaces(20)
             for j in range(9):
                 if (j == 0):
                     self.accs.printInColor("|", 'b')
@@ -164,6 +171,7 @@ class Board:
                     self.accs.printInColor("|", 'b')
                 self.accs.printInColor("", "w")
             print()
+            self.accs.printSpaces(20)
             for _ in range(9):
                 self.accs.printInColor("+", 'b')
                 for _ in range(6):
@@ -172,6 +180,7 @@ class Board:
             if i != 7:
                 print()
         print()
+        self.accs.printSpaces(20)
         for i in range(10):
             if (i != 9):
                 self.accs.printInColor("|", 'b')
@@ -181,6 +190,7 @@ class Board:
             else:
                 self.accs.printInColor("|", 'b')
         print()
+        self.accs.printSpaces(20)
         for _ in range(9):
             self.accs.printInColor("+", 'b')
             for _ in range(6):

@@ -93,7 +93,8 @@ class Play:
         dest = coordinates.Coordinates(-1, -1)
 
         selectedColor = input("Please enter your color: ").lower()
-        self.engine = eng.Engine(self.board, self.movements, self.getOppositeTurn(selectedColor))
+        # selectedColor = "black"
+        self.engine = eng.engine(self.board, self.movements, self.getOppositeTurn(selectedColor))
         while(True):
             self.board.drawBoard()
             if (self.isMate()):
@@ -124,7 +125,7 @@ class Play:
                     self.accs.printInColor(self.error, 'r')
                     continue
             else:
-                src, dest = self.engine.generateMove(self.getOppositeTurn(selectedColor))
+                src, dest = self.engine.generateMove()
                 # print(f"returned src was {self.board.getPieceAt(src).pieceColor}'s {self.board.getPieceAt(src).pieceType}")
                 # print(f"returned dest was calculated for {self.board.getPieceAt(dest).pieceColor}'s {self.board.getPieceAt(dest).pieceType}")
                 self.board.movePiece(src, dest)

@@ -55,5 +55,5 @@ class Accessories:
         return self.pieceValue[piece]
     
     def printSpaces(self, n):
-        for i in range(n):
+        for _ in range(n):
             print(" ", end = "")

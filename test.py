@@ -1,4 +1,7 @@
-a = b = 5
-b = 6
-print(a)
-print(b)
+myDict = {
+    'a' : "hello",
+    'b' : "bye"
+}
+
+for i in myDict:
+    print(myDict[i])
