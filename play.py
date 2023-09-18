@@ -6,7 +6,7 @@ from ai import engine as eng
 import sys
 class Play:
     def __init__(self):
-        sys.setrecursionlimit(10000)
+        sys.setrecursionlimit(100000)
         self.turn = "white"
         self.board = bd.Board()
         self.movements = mv.Movements(self.board)
@@ -79,7 +79,6 @@ class Play:
             print("You want to move ", self.board.positions[src.x][src.y].pieceType, " of color ", self.board.getPieceAt(src).pieceColor)
             dest.x = int(input("Enter x pos of where you want to to move: "))
             dest.y = int(input("Enter y pos of where you want to to move: "))
-
             if (self.validateMove(src, dest)):
                 self.board.movePiece(src, dest)
             else:
@@ -94,7 +93,7 @@ class Play:
 
         selectedColor = input("Please enter your color: ").lower()
         # selectedColor = "black"
-        self.engine = eng.engine(self.board, self.movements, self.getOppositeTurn(selectedColor))
+        self.engine = eng.Engine(self.board, self.movements, self.getOppositeTurn(selectedColor))
         while(True):
             self.board.drawBoard()
             if (self.isMate()):
@@ -126,7 +125,5 @@ class Play:
                     continue
             else:
                 src, dest = self.engine.generateMove()
-                # print(f"returned src was {self.board.getPieceAt(src).pieceColor}'s {self.board.getPieceAt(src).pieceType}")
-                # print(f"returned dest was calculated for {self.board.getPieceAt(dest).pieceColor}'s {self.board.getPieceAt(dest).pieceType}")
                 self.board.movePiece(src, dest)
             self.turn = self.getOppositeTurn(self.turn)

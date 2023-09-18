@@ -3,109 +3,60 @@ import movements as mv
 import coordinates
 import accessories as acs
 from . import evaluator as ev
-import random
 
-class engine:
-    def __init__(self, board, movements, engColor, depth = 2):
+class Engine:
+    def __init__(self, board, movements, engColor):
         self.board = board
         self.movements = movements
         self.engColor = engColor
-        self.depth = depth
         self.accs = acs.Accessories()
         self.evaluator = ev.Evaluator(self.board)
-
+    
     def generateMove(self):
         src = coordinates.Coordinates(-1, -1)
         dest = coordinates.Coordinates(-1, -1)
 
-        bestScore = self.minimax(0, self.engColor)
-        bestMoves = self.findAllMovesWithGivenScore(bestScore)
+        bestScore, bestMove = self.minimax(self.engColor, 3)
 
-        print("best score: ", bestScore)
-        print("best moves: ", bestMoves)
-        if (len(bestMoves) == 0):
-            bestMoves = self.getAllMoves(self.engColor)
-            self.accs.printInColor("\nNo best moves were found!!!\n", "r")
-        for move in bestMoves:
-            for coord in move:
-                coord.printCoordinates()
-            print()
-
-        randomIndex = random.randint(0, len(bestMoves) - 1)
-
-        src = bestMoves[randomIndex][0]
-        dest = bestMoves[randomIndex][1]
+        self.accs.printInColor("\nBest score: " + str(bestScore) + "\n", 'g')
+        src = bestMove[0]
+        dest = bestMove[1]
 
         return src, dest
     
-    def findAllMovesWithGivenScore(self, givenScore):
-        moves = []
-        allMoves = self.getAllMoves(self.engColor)
-        for src in allMoves:
-            for dest in allMoves[src]:
-                score = self.makeMoveAndEvaluate(src, dest)
-                self.board.revertMove(src, dest)
-                if (score == givenScore):
-                    moves.append([src.createNewCopy(), dest.createNewCopy()])
+    def minimax(self, color, depth):
+        if (depth == 0):
+            return self.evaluator.evaluateBoard(), []
 
-        return moves
-    def makeMoveAndEvaluate(self, src, dest):
-        beforeScore = self.evaluator.evaluateBoard()
-        self.board.movePiece(src, dest)
-        afterScore = self.evaluator.evaluateBoard()
-        return afterScore - beforeScore
-
-    def toMaximize(self, color):
-        # if (self.engColor == color == "white"):
-        #     return 1
-        # elif (self.engColor == color == "black"):
-        #     return 2
-        # elif (self.engColor != color and color == "white"):
-        #     return 3
-        # elif (self.engColor != color and color == "black"):
-        #     return 4
-        return color == "white"
-
-    def minimax(self, depth, color):
         allMoves = self.getAllMoves(color)
-        maxScore = -9999
-        minScore = 9999  
-        if (depth >= self.depth):
+        bestMove = []
+        if (self.isMaximize(color)):
+            maxEval = -9999
             for src in allMoves:
                 for dest in allMoves[src]:
-                    score = self.makeMoveAndEvaluate(src, dest)
+                    self.board.movePiece(src, dest)
+                    eval, temp = self.minimax(self.getOppositeColor(color), depth - 1)
                     self.board.revertMove(src, dest)
-                    if (self.toMaximize(color)):
-                        maxScore = max(score, maxScore)
-                    else:
-                        minScore = min(score, minScore)
-            if (self.toMaximize(color)):
-                return maxScore
-            else:
-                return minScore
-        for src in allMoves:
-            for dest in allMoves[src]:
-                self.board.movePiece(src, dest)
-                score = self.minimax(depth + 1, self.getOppositeColor(color))
-                self.board.revertMove(src, dest)
-                if (self.toMaximize(color)):
-                    maxScore = max(score, maxScore)
-                else:
-                    minScore = min(score, minScore)
-        if (self.toMaximize(color)):
-            return maxScore
+                    if (eval > maxEval):
+                        maxEval = eval
+                        bestMove = [src.createNewCopy(), dest.createNewCopy()]
+            return maxEval, bestMove
+        
         else:
-            return minScore
+            minEval = 9999
+            for src in allMoves:
+                for dest in allMoves[src]:
+                    self.board.movePiece(src, dest)
+                    eval, temp = self.minimax(self.getOppositeColor(color), depth - 1)
+                    self.board.revertMove(src, dest)
+                    if (eval < minEval):
+                        minEval = eval
+                        bestMove = [src.createNewCopy(), dest.createNewCopy()]
+            return minEval, bestMove
 
-    # delete it in future
-    def printAllMoves(self, allMoves):
-        for src in allMoves:
-            src.printCoordinates()
-            print("------>", end = "")
-            for moves in allMoves[src]:
-                moves.printCoordinates()
-            print()
-
+    def isMaximize(self, color):
+        return color == "white"
+    
     def getAllMoves(self, color):
         allMoves = {}
         coord = coordinates.Coordinates(-1, -1)
@@ -121,29 +72,3 @@ class engine:
         if (color == "white"):
             return "black"
         return "white"
-    
-    # def minimax(self, depth, color):
-        # if (depth >= self.depth):
-        #         return
-        #     allMoves = self.getAllMoves(color)
-        #     max = -9999
-        #     min = 9999
-        #     bestMove = [] # this will contain [[src1, dest1], [src2, dest2] ..., [srcN, destN]] if multiple best moves possible
-        #     for src in allMoves:
-        #         for dest in src:
-        #             scoreChange = self.makeMoveAndEvaluate(src, dest)
-        #             if (self.toMaximize(color) == 1 or self.toMaximize(color) == 4):
-        #                 if (scoreChange > max):
-        #                     max = scoreChange
-        #                     bestMove = [[src, dest]]
-        #                 elif (scoreChange == max):
-        #                     bestMove.append([src, dest])
-        #                 self.minimax(depth + 1, self.getOppositeColor(color))
-
-        #             elif (self.toMaximize(color) == 2 or self.toMaximize(color) == 3):
-        #                 if (scoreChange < min):
-        #                     min = scoreChange
-        #                     bestMove = [[src, dest]]
-        #                 elif (scoreChange == min):
-        #                     bestMove.append([src, dest])
-        #                 self.minimax(depth + 1, self.getOppositeColor(color))
