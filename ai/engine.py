@@ -63,45 +63,45 @@ class Engine:
                         bestMove.append([src.createNewCopy(), dest.createNewCopy()])
             return minEval, bestMove
 
-    def alphabeta(self, color, alpha, beta, depth):
-        if (depth == 0):
-            return self.evaluator.evaluateBoard(), []
+    # def alphabeta(self, color, alpha, beta, depth):
+    #     if (depth == 0):
+    #         return self.evaluator.evaluateBoard(), []
 
-        allMoves = self.getAllMoves(color)
-        bestMove = []
-        if (self.isMaximize(color)):
-            maxEval = -9999
-            for src in allMoves:
-                for dest in allMoves[src]:
-                    self.board.movePiece(src, dest)
-                    eval, temp = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
-                    self.board.revertMove(src, dest)
-                    alpha = max(alpha, eval)
-                    if (beta <= alpha):
-                        break
-                    if (eval > maxEval):
-                        maxEval = eval
-                        bestMove = [[src.createNewCopy(), dest.createNewCopy()]]
-                    elif (eval == maxEval):
-                        bestMove.append([src.createNewCopy(), dest.createNewCopy()])
-            return maxEval, bestMove
+    #     allMoves = self.getAllMoves(color)
+    #     bestMove = []
+    #     if (self.isMaximize(color)):
+    #         maxEval = -9999
+    #         for src in allMoves:
+    #             for dest in allMoves[src]:
+    #                 self.board.movePiece(src, dest)
+    #                 eval, temp = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
+    #                 self.board.revertMove(src, dest)
+    #                 alpha = max(alpha, eval)
+    #                 if (beta <= alpha):
+    #                     break
+    #                 if (eval > maxEval):
+    #                     maxEval = eval
+    #                     bestMove = [[src.createNewCopy(), dest.createNewCopy()]]
+    #                 elif (eval == maxEval):
+    #                     bestMove.append([src.createNewCopy(), dest.createNewCopy()])
+    #         return maxEval, bestMove
         
-        else:
-            minEval = 9999
-            for src in allMoves:
-                for dest in allMoves[src]:
-                    self.board.movePiece(src, dest)
-                    eval, temp = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
-                    self.board.revertMove(src, dest)
-                    beta = min(beta, eval)
-                    if (beta <= alpha):
-                        break
-                    if (eval < minEval):
-                        minEval = eval
-                        bestMove = [[src.createNewCopy(), dest.createNewCopy()]]
-                    elif (eval == minEval):
-                        bestMove.append([src.createNewCopy(), dest.createNewCopy()])
-            return minEval, bestMove
+    #     else:
+    #         minEval = 9999
+    #         for src in allMoves:
+    #             for dest in allMoves[src]:
+    #                 self.board.movePiece(src, dest)
+    #                 eval, temp = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
+    #                 self.board.revertMove(src, dest)
+    #                 beta = min(beta, eval)
+    #                 if (beta <= alpha):
+    #                     break
+    #                 if (eval < minEval):
+    #                     minEval = eval
+    #                     bestMove = [[src.createNewCopy(), dest.createNewCopy()]]
+    #                 elif (eval == minEval):
+    #                     bestMove.append([src.createNewCopy(), dest.createNewCopy()])
+    #         return minEval, bestMove
 
     def isMaximize(self, color):
         return color == "white"
