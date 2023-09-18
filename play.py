@@ -127,3 +127,30 @@ class Play:
                 src, dest = self.engine.generateMove()
                 self.board.movePiece(src, dest)
             self.turn = self.getOppositeTurn(self.turn)
+
+    def computerPlaysComputer(self):
+        src = coordinates.Coordinates(-1, -1)
+        dest = coordinates.Coordinates(-1, -1)
+
+        # selectedColor = input("Please enter your color: ").lower()
+        intelligence1 = int(input("Please enter the intelligence of computer1(higher intelligence means higher think time): "))
+        intelligence2 = int(input("Please enter the intelligence of computer2(higher intelligence means higher think time): "))
+        self.engine1 = eng.Engine(self.board, self.movements, self.getOppositeTurn("white"), intelligence1)
+        self.engine2 = eng.Engine(self.board, self.movements, self.getOppositeTurn("black"), intelligence2)
+        while(True):
+            self.board.drawBoard()
+            if (self.isMate()):
+                print()
+                self.accs.printInColor("\nThe game is over and " + self.getOppositeTurn(self.turn) + " has won!!\n", "g")
+                print()
+                break
+            print("\n\nIts ", self.turn, "'s turn to move\n\n")
+
+            if (self.turn == "white"):
+                src, dest = self.engine1.generateMove()
+                self.board.movePiece(src, dest)
+                self.turn = self.getOppositeTurn(self.turn)
+            else:
+                src, dest = self.engine2.generateMove()
+                self.board.movePiece(src, dest)
+                self.turn = self.getOppositeTurn(self.turn)
