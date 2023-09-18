@@ -5,10 +5,11 @@ import accessories as acs
 from . import evaluator as ev
 
 class Engine:
-    def __init__(self, board, movements, engColor):
+    def __init__(self, board, movements, engColor, intelligence):
         self.board = board
         self.movements = movements
         self.engColor = engColor
+        self.depth = intelligence
         self.accs = acs.Accessories()
         self.evaluator = ev.Evaluator(self.board)
     
@@ -16,7 +17,7 @@ class Engine:
         src = coordinates.Coordinates(-1, -1)
         dest = coordinates.Coordinates(-1, -1)
 
-        bestScore, bestMove = self.minimax(self.engColor, 3)
+        bestScore, bestMove = self.minimax(self.engColor, self.depth)
 
         self.accs.printInColor("\nBest score: " + str(bestScore) + "\n", 'g')
         src = bestMove[0]

@@ -92,8 +92,8 @@ class Play:
         dest = coordinates.Coordinates(-1, -1)
 
         selectedColor = input("Please enter your color: ").lower()
-        # selectedColor = "black"
-        self.engine = eng.Engine(self.board, self.movements, self.getOppositeTurn(selectedColor))
+        intelligence = int(input("Please enter the intelligence of computer(higher intelligence means higher think time): "))
+        self.engine = eng.Engine(self.board, self.movements, self.getOppositeTurn(selectedColor), intelligence)
         while(True):
             self.board.drawBoard()
             if (self.isMate()):
