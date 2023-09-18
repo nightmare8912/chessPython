@@ -10,7 +10,7 @@ match opt:
         play.humanPlaysHuman()
     
     case 2:
-        play.computerPlaysComputer()
+        play.humanPlaysComputer()
 
     case 3:
         play.computerPlaysComputer()
