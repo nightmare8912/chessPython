@@ -1,16 +1,12 @@
-import play as pl
+import mainCMD as cmd
+import mainGUI as gui
 
-
-play = pl.Play()
-
-opt = 2
-opt = int(input("Enter 1 to play with friend, 2 to play with computer, 3 for computer vs computer: "))
+# opt = int(input("Enter 1 to play in GUI, 2 to play in CMD: "))
+opt = 1
 match opt:
     case 1:
-        play.humanPlaysHuman()
-    
+        gu = gui.MainGUI()
+        gu.start()
     case 2:
-        play.humanPlaysComputer()
-
-    case 3:
-        play.computerPlaysComputer()
+        cm = cmd.MainCMD()
+        cm.start()

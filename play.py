@@ -4,6 +4,7 @@ import coordinates
 import accessories
 from ai import engine as eng
 from ai import evaluator as ev
+import time
 import sys
 class Play:
     def __init__(self):
@@ -61,7 +62,7 @@ class Play:
         src = coordinates.Coordinates(-1, -1)
         dest = coordinates.Coordinates(-1, -1)
         while(True):
-            self.board.drawBoard()
+            self.board.drawBoard(self.turn)
             if (self.isMate()):
                 print()
                 self.accs.printInColor("\nThe game is over and " + self.getOppositeTurn(self.turn) + " has won!!\n", "g")
@@ -72,7 +73,7 @@ class Play:
             src.x = int(input("Enter x pos of piece to move: "))
             src.y = int(input("Enter y pos of piece to move: "))
 
-            self.board.drawBoardWithMoves(self.movements.getPossibleMoves(src))
+            self.board.drawBoardWithMoves(self.turn, self.movements.getPossibleMoves(src))
 
             possibleMoves = self.movements.getPossibleMoves(src)
             print("Possible moves: ")
@@ -99,20 +100,20 @@ class Play:
         intelligence = int(input("Please enter the intelligence of computer(higher intelligence means higher think time): "))
         self.engine = eng.Engine(self.board, self.movements, self.getOppositeTurn(selectedColor), intelligence)
         while(True):
-            self.board.drawBoard()
+            self.board.drawBoard(self.turn)
             if (self.isMate()):
                 print()
                 self.accs.printInColor("\nThe game is over and " + self.getOppositeTurn(self.turn) + " has won!!\n", "g")
                 print()
                 break
-            print("\n\nIts ", self.getOppositeTurn(self.turn), "'s turn to move\n\n")
+            print("\n\nIts ", self.turn, "'s turn to move\n\n")
             self.accs.printInColor("Current score is: " + str(self.evaluator.evaluateBoard()) + "\n", "b")
 
             if (self.turn == selectedColor):
                 src.x = int(input("Enter x pos of piece to move: "))
                 src.y = int(input("Enter y pos of piece to move: "))
 
-                self.board.drawBoardWithMoves(self.movements.getPossibleMoves(src))
+                self.board.drawBoardWithMoves(selectedColor, self.movements.getPossibleMoves(src))
 
                 possibleMoves = self.movements.getPossibleMoves(src)
                 print("Possible moves: ")
@@ -138,13 +139,12 @@ class Play:
     def computerPlaysComputer(self):
         src = coordinates.Coordinates(-1, -1)
         dest = coordinates.Coordinates(-1, -1)
-
         intelligence1 = int(input("Please enter the intelligence of computer1(higher intelligence means higher think time): "))
         intelligence2 = int(input("Please enter the intelligence of computer2(higher intelligence means higher think time): "))
         self.engine1 = eng.Engine(self.board, self.movements, self.getOppositeTurn("white"), intelligence1)
         self.engine2 = eng.Engine(self.board, self.movements, self.getOppositeTurn("black"), intelligence2)
         while(True):
-            self.board.drawBoard()
+            self.board.drawBoard(self.turn)
             if (self.isMate()):
                 print()
                 self.accs.printInColor("\nThe game is over and " + self.getOppositeTurn(self.turn) + " has won!!\n", "g")

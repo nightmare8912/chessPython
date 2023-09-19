@@ -1,5 +1,2 @@
-import engine
-
-eng = engine.engine("hi", "hello", "white")
-
-print(eng.toMaximize("white"))
+for i in range(7, -1, -1):
+    print(i)
