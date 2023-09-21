@@ -2,7 +2,6 @@ import pygame as p
 from gui import ChessLogics
 import playGUIBackend as pl
 import coordinates
-from ai import engine as eng
 
 WIDTH = HEIGHT = 512
 DIMENSION = 8
@@ -58,33 +57,23 @@ class PlayGUI:
                             continue
                         sqSelected = ()
                         playerClicks = []
-            if (len(playerClicks) > 0):
-                coord.assignValue(playerClicks[0][0], playerClicks[0][1])
-                allMoves = play.returnPossibleMoves(coord)
-                self.drawGameState(screen, gs, allMoves, sqSelected)
-            else:
-                self.drawGameState(screen, gs, [], sqSelected)
-            clock.tick(24)
+            coord.assignValue(playerClicks[0][0], playerClicks[0][1])
+            allMoves = play.returnPossibleMoves(coord)
+            self.drawGameState(screen, gs, allMoves, sqSelected)
+            clock.tick(15)
             p.display.flip()
 
     def humanPlaysComputer(self):
-        selectedColor = input("Please enter your color: ").lower()
-        intelligence = int(input("Please enter the intelligence of computer(higher intelligence means higher think time): "))
-        self.engine = eng.Engine(self.board, self.movements, self.getOppositeTurn(selectedColor), intelligence)
+        pass
     def computerPlaysComputer(self):
         pass
 
     def drawGameState(self, screen, gs, validMoves, sqSelected):
         self.drawBoard(screen)
-        if len(validMoves) == 0:
-            self.drawPieces(screen, gs.board)
-            self.highlightCurrentSquare(screen, sqSelected)
-            return
         allMoves = []
         for moves in validMoves:
-            print("valid moves found")
-            allMoves.append([moves.x, moves.y])
-        self.highlightMoveSquares(screen, allMoves, sqSelected)
+            allMoves.append
+        self.highlightSquares(screen, gs, validMoves, sqSelected)
         self.drawPieces(screen, gs.board)
 
     def drawBoard(self, screen):
@@ -113,7 +102,7 @@ class PlayGUI:
         dest.printCoordinates()
         return src, dest
     
-    def highlightCurrentSquare(self, screen, sqSelected):
+    def highlightSquares(self, screen, gs, validMoves, sqSelected):
         if (sqSelected != ()):
             r, c = sqSelected
             # to highlight selected square
@@ -121,14 +110,8 @@ class PlayGUI:
             s.set_alpha(100) # transparency
             s.fill(p.Color('blue'))
             screen.blit(s, (c * SQ_SIZE, r * SQ_SIZE))
-
-    def highlightMoveSquares(self, screen, validMoves, sqSelected):
-        if (sqSelected != ()):
-            # r, c = sqSelected
-            # to highlight selected square
-            s = p.Surface((SQ_SIZE, SQ_SIZE))
-            s.set_alpha(100) # transparency
             # highlight possible moves from that square
             s.fill(p.Color("yellow"))
             for move in validMoves:
-                screen.blit(s, (move[1] * SQ_SIZE, move[0] * SQ_SIZE))
+                if move.startRow == r and move.startCol == c:
+                    screen.blit(s, (move.endCol * SQ_SIZE, move.endRow *SQ_SIZE))

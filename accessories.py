@@ -3,6 +3,7 @@ GREEN = '\033[92m'
 YELLOW = '\033[93m'
 BLUE = '\033[94m'
 RESET = '\033[0m'
+PURPLE = '\033[95m'
 
 class Accessories:
 
@@ -13,7 +14,7 @@ class Accessories:
             "bishop" : 3,
             "rook" : 5,
             "queen" : 9,
-            "king" : 1000
+            "king" : 100
         }
         
     def printInColor(self, text, color):
@@ -26,6 +27,8 @@ class Accessories:
                 print(YELLOW + text + RESET, end = "")
             case "b":
                 print(BLUE + text + RESET, end = "")
+            case "p":
+                print(PURPLE + text + RESET, end = "")
     def printSL(self, text, sep, end = ""):
         print(text, sep, end)
     

@@ -42,28 +42,13 @@ class Play:
         self.error = "Please chose a valid position to move"
         return False
 
-    def isMate(self):
-        allPossibleMoves = []
-        coord = coordinates.Coordinates(-1, -1)
-        for i in range(8):
-            for j in range(8):
-                if (len(allPossibleMoves) > 0):
-                    return False
-                coord.assignValue(i, j)
-                if (self.board.getPieceAt(coord).pieceColor == self.turn):
-                    if (len(self.movements.getPossibleMoves(coord)) != 0):
-                        allPossibleMoves.append(self.movements.getPossibleMoves(coord))
-        
-        return True
-
-
     def humanPlaysHuman(self):
         
         src = coordinates.Coordinates(-1, -1)
         dest = coordinates.Coordinates(-1, -1)
         while(True):
             self.board.drawBoard(self.turn)
-            if (self.isMate()):
+            if (self.movements.isMate(self.turn)):
                 print()
                 self.accs.printInColor("\nThe game is over and " + self.getOppositeTurn(self.turn) + " has won!!\n", "g")
                 print()
@@ -73,9 +58,24 @@ class Play:
             src.x = int(input("Enter x pos of piece to move: "))
             src.y = int(input("Enter y pos of piece to move: "))
 
-            self.board.drawBoardWithMoves(self.turn, self.movements.getPossibleMoves(src))
-
             possibleMoves = self.movements.getPossibleMoves(src)
+
+            # if (self.board.getPieceAt(src).pieceType == "king"):
+            #     src1, dest1, dest2 = self.movements.getCastlingMoves(self.turn)
+            #     if self.movements.isCastle(src):
+            #         print("true was returned")
+            #         possibleMoves.append([src1.createNewCopy(), dest1])
+            #     else:
+            #         print("false was returned")
+            #     if self.movements.isCastle(src):
+            #         print("true was returned")
+            #         possibleMoves.append([src1.createNewCopy(), dest1])
+            #     else:
+            #         print("false was returned")
+
+            self.board.drawBoardWithMoves(self.turn, possibleMoves)
+
+            # possibleMoves = self.movements.getPossibleMoves(src)
             print("Possible moves: ")
             for i in possibleMoves:
                 i.printCoordinates()
@@ -97,11 +97,11 @@ class Play:
         dest = coordinates.Coordinates(-1, -1)
 
         selectedColor = input("Please enter your color: ").lower()
-        intelligence = int(input("Please enter the intelligence of computer(higher intelligence means higher think time): "))
+        intelligence = int(input("Please enter the intelligence of computer(higher intelligence means higher think time)(recommended -> 3): "))
         self.engine = eng.Engine(self.board, self.movements, self.getOppositeTurn(selectedColor), intelligence)
         while(True):
-            self.board.drawBoard(self.turn)
-            if (self.isMate()):
+            self.board.drawBoard(selectedColor)
+            if (self.movements.isMate(self.turn)):
                 print()
                 self.accs.printInColor("\nThe game is over and " + self.getOppositeTurn(self.turn) + " has won!!\n", "g")
                 print()
@@ -113,9 +113,16 @@ class Play:
                 src.x = int(input("Enter x pos of piece to move: "))
                 src.y = int(input("Enter y pos of piece to move: "))
 
-                self.board.drawBoardWithMoves(selectedColor, self.movements.getPossibleMoves(src))
-
                 possibleMoves = self.movements.getPossibleMoves(src)
+
+                # if (self.board.getPieceAt(src).pieceType == "king" or self.board.getPieceAt(src).pieceType == "rook"):
+                #     src1, dest1, dest2 = self.movements.getCastlingMoves(self.turn)
+                #     if self.movements.isCastle(src1, dest1):
+                #         possibleMoves.append([src1.createNewCopy(), dest1])
+                #     if self.movements.isCastle(src1, dest2):
+                #         possibleMoves.append([src1.createNewCopy(), dest1])
+
+                self.board.drawBoardWithMoves(self.turn, possibleMoves)
                 print("Possible moves: ")
                 for i in possibleMoves:
                     i.printCoordinates()
@@ -139,13 +146,13 @@ class Play:
     def computerPlaysComputer(self):
         src = coordinates.Coordinates(-1, -1)
         dest = coordinates.Coordinates(-1, -1)
-        intelligence1 = int(input("Please enter the intelligence of computer1(higher intelligence means higher think time): "))
-        intelligence2 = int(input("Please enter the intelligence of computer2(higher intelligence means higher think time): "))
-        self.engine1 = eng.Engine(self.board, self.movements, self.getOppositeTurn("white"), intelligence1)
-        self.engine2 = eng.Engine(self.board, self.movements, self.getOppositeTurn("black"), intelligence2)
+        intelligence1 = int(input("Please enter the intelligence of computer1(higher intelligence means higher think time)(1-3): "))
+        intelligence2 = int(input("Please enter the intelligence of computer2(higher intelligence means higher think time)(1-3): "))
+        self.engine1 = eng.Engine(self.board, self.movements, "white", intelligence1)
+        self.engine2 = eng.Engine(self.board, self.movements, "black", intelligence2)
         while(True):
             self.board.drawBoard(self.turn)
-            if (self.isMate()):
+            if (self.movements.isMate(self.turn)):
                 print()
                 self.accs.printInColor("\nThe game is over and " + self.getOppositeTurn(self.turn) + " has won!!\n", "g")
                 print()
@@ -155,14 +162,11 @@ class Play:
 
             if (self.turn == "white"):
                 src, dest = self.engine1.generateMove()
-                self.printMovement(src, dest)
-                self.board.movePiece(src, dest)
-                self.turn = self.getOppositeTurn(self.turn)
             else:
                 src, dest = self.engine2.generateMove()
-                self.printMovement(src, dest)
-                self.board.movePiece(src, dest)
-                self.turn = self.getOppositeTurn(self.turn)
+            self.printMovement(src, dest)
+            self.board.movePiece(src, dest)
+            self.turn = self.getOppositeTurn(self.turn)
 
     def printMovement(self, src, dest):
         print(self.board.getPieceAt(src).pieceColor + "'s "+ self.board.getPieceAt(src).pieceType +" was moved from ", end = "")

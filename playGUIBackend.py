@@ -7,21 +7,14 @@ from ai import evaluator as ev
 import time
 import sys
 class Play:
-    def __init__(self):
+    def __init__(self, board, movements):
         sys.setrecursionlimit(100000)
         self.turn = "white"
-        self.board = bd.Board()
-        self.movements = mv.Movements(self.board)
+        self.board = board
+        self.movements = movements
         self.accs = accessories.Accessories()
         self.evaluator = ev.Evaluator(self.board)
         self.error = ""
-    
-    # !!!!!dont make turn in this function as global!!!!!
-    def getOppositeTurn(self, turn):
-        if (turn == "white"):
-            return "black"
-        else:
-            return "white"
 
     def validateMove(self, src, dest):
 

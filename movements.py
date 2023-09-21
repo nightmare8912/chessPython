@@ -327,3 +327,59 @@ class Movements:
     def isCheck(self, kingPos):
         return (len(self.getThreatsAt(kingPos)) != 0)
         
+    def getValidCastlingMoves(self, src):
+
+        castlingLocn = self.getAllCastlingMoves(self.board.getPieceAt(src).pieceColor)
+        tempValidMoves = []
+        for dest in castlingLocn:
+            if (self.board.getPieceAt(dest).pieceType != "rook"):
+                continue
+            if (self.board.getPieceAt(src).pieceColor != self.board.getPieceAt(dest).pieceColor):
+                continue
+            if (self.board.getPieceAt(src).timesMoved != 0 and self.board.getPieceAt(dest).timesMoved != 0):
+                continue
+            if (self.isCheck(src)):
+                continue
+            tempValidMoves.append(dest.createNewCopy())
+        
+        validContenders = []
+        colorFactor = 0
+        if (self.board.getPieceAt(src).pieceColor == "white"):
+            colorFactor = 7
+        coord1 = coordinates.Coordinates(colorFactor, 3)
+        coord2 = coordinates.Coordinates(colorFactor, 5)
+        for dest in tempValidMoves:
+            allMovesForPieceAtDest = self.getPossibleMoves(dest)
+            for move in allMovesForPieceAtDest:
+                if move.compare(coord1) and self.board.getPieceAt(coord1).pieceType == "":
+                    validContenders.append(move)
+                if move.compare(coord2) and self.board.getPieceAt(coord1).pieceType == "":
+                    validContenders.append(move)
+
+        return validContenders
+                
+    
+    def getAllCastlingMoves(self, color):
+        colorFactor = 0
+        if (color == "white"):
+            colorFactor = 7
+        dest1 = coordinates.Coordinates(-1, -1)
+        dest2 = coordinates.Coordinates(-1, -1)
+        dest1.assignValue(colorFactor, 0)
+        dest2.assignValue(colorFactor, 7)
+
+        return [dest1, dest2]
+    
+    def isMate(self, color):
+        allPossibleMoves = []
+        coord = coordinates.Coordinates(-1, -1)
+        for i in range(8):
+            for j in range(8):
+                if (len(allPossibleMoves) > 0):
+                    return False
+                coord.assignValue(i, j)
+                if (self.board.getPieceAt(coord).pieceColor == color):
+                    if (len(self.getPossibleMoves(coord)) != 0):
+                        allPossibleMoves.append(self.getPossibleMoves(coord))
+        
+        return True
