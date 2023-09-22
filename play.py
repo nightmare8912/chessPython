@@ -57,25 +57,13 @@ class Play:
             self.accs.printInColor("Current score is: " + str(self.evaluator.evaluateBoard()) + "\n", "b")
             src.x = int(input("Enter x pos of piece to move: "))
             src.y = int(input("Enter y pos of piece to move: "))
-
+            if (not src.isValid()):
+                    self.accs.printInColor("Enter a valid move!", "r")
+                    continue
             possibleMoves = self.movements.getPossibleMoves(src)
 
-            # if (self.board.getPieceAt(src).pieceType == "king"):
-            #     src1, dest1, dest2 = self.movements.getCastlingMoves(self.turn)
-            #     if self.movements.isCastle(src):
-            #         print("true was returned")
-            #         possibleMoves.append([src1.createNewCopy(), dest1])
-            #     else:
-            #         print("false was returned")
-            #     if self.movements.isCastle(src):
-            #         print("true was returned")
-            #         possibleMoves.append([src1.createNewCopy(), dest1])
-            #     else:
-            #         print("false was returned")
-
             self.board.drawBoardWithMoves(self.turn, possibleMoves)
-
-            # possibleMoves = self.movements.getPossibleMoves(src)
+            
             print("Possible moves: ")
             for i in possibleMoves:
                 i.printCoordinates()
@@ -83,6 +71,9 @@ class Play:
             print("You want to move ", self.board.positions[src.x][src.y].pieceType, " of color ", self.board.getPieceAt(src).pieceColor)
             dest.x = int(input("Enter x pos of where you want to to move: "))
             dest.y = int(input("Enter y pos of where you want to to move: "))
+            if (not dest.isValid()):
+                    self.accs.printInColor("Enter a valid move!", "r")
+                    continue
             if (self.validateMove(src, dest)):
                 self.printMovement(src, dest)
                 self.board.movePiece(src, dest)
@@ -112,15 +103,11 @@ class Play:
             if (self.turn == selectedColor):
                 src.x = int(input("Enter x pos of piece to move: "))
                 src.y = int(input("Enter y pos of piece to move: "))
+                if (not src.isValid()):
+                    self.accs.printInColor("Enter a valid move!", "r")
+                    continue
 
                 possibleMoves = self.movements.getPossibleMoves(src)
-
-                # if (self.board.getPieceAt(src).pieceType == "king" or self.board.getPieceAt(src).pieceType == "rook"):
-                #     src1, dest1, dest2 = self.movements.getCastlingMoves(self.turn)
-                #     if self.movements.isCastle(src1, dest1):
-                #         possibleMoves.append([src1.createNewCopy(), dest1])
-                #     if self.movements.isCastle(src1, dest2):
-                #         possibleMoves.append([src1.createNewCopy(), dest1])
 
                 self.board.drawBoardWithMoves(self.turn, possibleMoves)
                 print("Possible moves: ")
@@ -130,7 +117,9 @@ class Play:
                 print("You want to move ", self.board.positions[src.x][src.y].pieceType, " of color ", self.board.getPieceAt(src).pieceColor)
                 dest.x = int(input("Enter x pos of where you want to to move: "))
                 dest.y = int(input("Enter y pos of where you want to to move: "))
-
+                if (not dest.isValid()):
+                    self.accs.printInColor("Enter a valid move!", "r")
+                    continue
                 if (self.validateMove(src, dest)):
                     self.printMovement(src, dest)
                     self.board.movePiece(src, dest)
