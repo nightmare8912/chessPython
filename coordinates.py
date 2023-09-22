@@ -21,7 +21,7 @@ class Coordinates:
         return copy.deepcopy(self)
 
     def printCoordinates(self):
-        print("( ", self.x, ", ", self.y, "), ", end = "")
+        print("(", self.y, ", ", self.x, "),", end = "")
 
     def getDistance(self, c1, c2):
         return math.sqrt(math.pow(c1.x - c2.x, 2) + math.pow(c1.y - c2.y, 2))

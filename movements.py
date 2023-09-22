@@ -381,5 +381,6 @@ class Movements:
                 if (self.board.getPieceAt(coord).pieceColor == color):
                     if (len(self.getPossibleMoves(coord)) != 0):
                         allPossibleMoves.append(self.getPossibleMoves(coord))
+                        return False
         
         return True

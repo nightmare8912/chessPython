@@ -50,6 +50,13 @@ class Board:
     def drawBoardWithMovesForWhite(self, moves):
         print("\n")
         self.accs.printSpaces(20)
+        for i in range(8):
+            if (i != 4):
+                self.accs.printInColor('\t--', 'p')
+            else:
+                self.accs.printInColor('\tx', 'y')
+        print("\n")
+        self.accs.printSpaces(20)
         for _ in range(9):
             self.accs.printInColor("+", 'b')
             for _ in range(6):
@@ -60,7 +67,12 @@ class Board:
                 if self.positions[point.x][point.y].pieceType == "":
                     self.positions[point.x][point.y].pieceType = "X"
         for i in range(8):
-            self.accs.printSpaces(20)
+            self.accs.printSpaces(10)
+            if (i != 4):
+                self.accs.printInColor('|', 'p')
+            else:
+                self.accs.printInColor('y', 'y')
+            self.accs.printSpaces(9)
             for j in range(9):
                 if (j == 0):
                     self.accs.printInColor("|", 'b')
@@ -123,6 +135,14 @@ class Board:
 
     def drawBoardForWhite(self):
         print("\n")
+        print()
+        self.accs.printSpaces(20)
+        for i in range(8):
+            if (i != 4):
+                self.accs.printInColor('\t--', 'p')
+            else:
+                self.accs.printInColor('\tx', 'y')
+        print("\n")
         self.accs.printSpaces(20)
         for _ in range(9):
             self.accs.printInColor("+", 'b')
@@ -131,7 +151,12 @@ class Board:
         self.accs.printInColor("+", 'b')
         print()
         for i in range(8):
-            self.accs.printSpaces(20)
+            self.accs.printSpaces(10)
+            if (i != 4):
+                self.accs.printInColor('|', 'p')
+            else:
+                self.accs.printInColor('y', 'y')
+            self.accs.printSpaces(9)
             for j in range(9):
                 if (j == 0):
                     self.accs.printInColor("|", 'b')
@@ -187,6 +212,13 @@ class Board:
     def drawBoardWithMovesForBlack(self, moves):
         print("\n")
         self.accs.printSpaces(20)
+        for i in range(8):
+            if (i != 4):
+                self.accs.printInColor('\t--', 'p')
+            else:
+                self.accs.printInColor('\tx', 'y')
+        print("\n")
+        self.accs.printSpaces(20)
         for _ in range(9):
             self.accs.printInColor("+", 'b')
             for _ in range(6):
@@ -197,7 +229,12 @@ class Board:
                 if self.positions[point.x][point.y].pieceType == "":
                     self.positions[point.x][point.y].pieceType = "X"
         for i in range(7, -1, -1):
-            self.accs.printSpaces(20)
+            self.accs.printSpaces(10)
+            if (i != 4):
+                self.accs.printInColor('|', 'p')
+            else:
+                self.accs.printInColor('y', 'y')
+            self.accs.printSpaces(9)
             for j in range(9):
                 if (j == 0):
                     self.accs.printInColor("|", 'b')
@@ -264,6 +301,13 @@ class Board:
     def drawBoardForBlack(self):
         print("\n")
         self.accs.printSpaces(20)
+        for i in range(8):
+            if (i != 4):
+                self.accs.printInColor('\t--', 'p')
+            else:
+                self.accs.printInColor('\tx', 'y')
+        print("\n")
+        self.accs.printSpaces(20)
         for _ in range(9):
             self.accs.printInColor("+", 'b')
             for _ in range(6):
@@ -271,7 +315,12 @@ class Board:
         self.accs.printInColor("+", 'b')
         print()
         for i in range(7, -1, -1):
-            self.accs.printSpaces(20)
+            self.accs.printSpaces(10)
+            if (i != 4):
+                self.accs.printInColor('|', 'p')
+            else:
+                self.accs.printInColor('y', 'y')
+            self.accs.printSpaces(9)
             for j in range(9):
                 if (j == 0):
                     self.accs.printInColor("|", 'b')

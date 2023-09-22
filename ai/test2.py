@@ -1,9 +1,4 @@
-def myfn(i):
-    if (i == 2):
-        i = 10
-        print(i)
-    else:
-        myfn(i + 1)
-        print(i)
+import random
 
-myfn(0)
+print(random.randint(0, 0))
+    
