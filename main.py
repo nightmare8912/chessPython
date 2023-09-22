@@ -26,11 +26,13 @@ accs.printInColor("\nHappy Playing!\n", 'g')
 
 
 # opt = int(input("Enter 1 to play in GUI, 2 to play in CMD: "))
-opt = 2
-match opt:
-    case 1:
-        gu = gui.MainGUI()
-        gu.start()
-    case 2:
-        cm = cmd.MainCMD()
-        cm.start()
+
+while (True):
+    opt = 2
+    match opt:
+        case 1:
+            gu = gui.MainGUI()
+            gu.start()
+        case 2:
+            cm = cmd.MainCMD()
+            cm.start()

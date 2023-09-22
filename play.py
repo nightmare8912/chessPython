@@ -143,8 +143,10 @@ class Play:
     def computerPlaysComputer(self):
         src = coordinates.Coordinates(-1, -1)
         dest = coordinates.Coordinates(-1, -1)
-        intelligence1 = int(input("Please enter the intelligence of computer1(higher intelligence means higher think time)(1-3): "))
-        intelligence2 = int(input("Please enter the intelligence of computer2(higher intelligence means higher think time)(1-3): "))
+        # intelligence1 = int(input("Please enter the intelligence of computer1(higher intelligence means higher think time)(1-3): "))
+        # intelligence2 = int(input("Please enter the intelligence of computer2(higher intelligence means higher think time)(1-3): "))
+        intelligence1 = 3
+        intelligence2 = 3
         self.engine1 = eng.Engine(self.board, self.movements, "white", intelligence1)
         self.engine2 = eng.Engine(self.board, self.movements, "black", intelligence2)
         while(True):

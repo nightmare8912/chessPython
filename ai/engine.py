@@ -24,7 +24,7 @@ class Engine:
         dest = coordinates.Coordinates(-1, -1)
 
         self.posEval = self.branchesPruned = 0
-        start = time.time()
+        self.start = time.time()
         # bestScore, bestMoves = self.minimax(self.engColor, self.depth)
         # bestScore, bestMoves = self.alphabeta1(self.engColor, -9999, 9999, self.depth)
         bestScore, bestMoves = self.alphabeta(self.engColor, -9999, 9999, self.depth)
@@ -32,13 +32,13 @@ class Engine:
         # self.printMoves(bestMoves)
         # self.accs.printInColor("Possible best moves: " + str(len(bestMoves)) + "\n", 'g')
 
-        end = time.time()
+        self.end = time.time()
         self.accs.printInColor("\nPositions Evaluated: " + str(self.posEval) + "\n", "y")
         self.accs.printInColor("Branches Pruned: " + str(self.branchesPruned) + "\n", "y")
         random.shuffle(bestMoves)
         
         self.accs.printInColor("Best score: " + str(bestScore) + "\n", 'g')
-        self.accs.printInColor("Think time: " + str(end - start) + " seconds or " + str((end - start) / 60) + " minutes\n", 'p')
+        self.accs.printInColor("Think time: " + str(self.end - self.start) + " seconds or " + str((self.end - self.start) / 60) + " minutes\n", 'p')
         try:
             src = bestMoves[0][0]
             dest = bestMoves[0][1]
@@ -135,7 +135,8 @@ class Engine:
                     #     # print("Checkmate was found!!!")
                     #     break
                     self.posEval += 1
-                    self.accs.print_and_update("Positions evaluated: " + str(self.posEval) + "   Searching at depth: " + str(depth), len("Positions evaluated:    Searching at depth: ") + len(str(self.posEval - 1)) + len(str(depth)), 'p')
+                    toPrint = "Positions evaluated: " + str(self.posEval) + "   Searching at depth: " + str(depth) + "   Positions per second: " + str(self.posEval / (time.time() - self.start))
+                    self.accs.print_and_update(toPrint, len(toPrint), 'p')
                     eval, temp = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
                     self.board.revertMove(src, dest)
                     if (eval > maxEval):
@@ -167,7 +168,8 @@ class Engine:
                     #     # print("Checkmate was found!!!")
                     #     break
                     self.posEval += 1
-                    self.accs.print_and_update("Positions evaluated: " + str(self.posEval) + "   Searching at depth: " + str(depth), len("Positions evaluated:    Searching at depth: ") + len(str(self.posEval - 1)) + len(str(depth)), 'p')
+                    toPrint = "Positions evaluated: " + str(self.posEval) + "   Searching at depth: " + str(depth) + "   Positions per second: " + str(self.posEval / (time.time() - self.start))
+                    self.accs.print_and_update(toPrint, len(toPrint), 'p')
                     eval, temp = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
                     self.board.revertMove(src, dest)
                     if (eval < minEval):
