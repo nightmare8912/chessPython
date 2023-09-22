@@ -33,7 +33,7 @@ class Engine:
         # self.accs.printInColor("Possible best moves: " + str(len(bestMoves)) + "\n", 'g')
 
         end = time.time()
-        self.accs.printInColor("Positions Evaluated: " + str(self.posEval) + "\n", "y")
+        self.accs.printInColor("\nPositions Evaluated: " + str(self.posEval) + "\n", "y")
         self.accs.printInColor("Branches Pruned: " + str(self.branchesPruned) + "\n", "y")
         random.shuffle(bestMoves)
         
@@ -73,8 +73,9 @@ class Engine:
                         self.board.revertMove(src, dest)
                         print("Checkmate was found!!!")
                         break
-                    eval, temp = self.minimax(self.getOppositeColor(color), depth - 1)
                     self.posEval += 1
+                    print("Positions evaluated: ", self.posEval, flush = True)
+                    eval, temp = self.minimax(self.getOppositeColor(color), depth - 1)
                     self.board.revertMove(src, dest)
                     if (eval > maxEval):
                         maxEval = eval
@@ -126,15 +127,16 @@ class Engine:
             for src in allMoves:
                 for dest in allMoves[src]:
                     self.board.movePiece(src, dest)
-                    if (self.movements.isMate(self.getOppositeColor(color))):
-                        maxEval = CHECKMATE
-                        bestMove = [[src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(maxEval)]]
-                        toBreak = True
-                        self.board.revertMove(src, dest)
-                        # print("Checkmate was found!!!")
-                        break
-                    eval, temp = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
+                    # if (self.movements.isMate(self.getOppositeColor(color))):
+                    #     maxEval = CHECKMATE
+                    #     bestMove = [[src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(maxEval)]]
+                    #     toBreak = True
+                    #     self.board.revertMove(src, dest)
+                    #     # print("Checkmate was found!!!")
+                    #     break
                     self.posEval += 1
+                    self.accs.print_and_update("Positions evaluated: " + str(self.posEval) + "   Searching at depth: " + str(depth), len("Positions evaluated:    Searching at depth: ") + len(str(self.posEval - 1)) + len(str(depth)), 'p')
+                    eval, temp = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
                     self.board.revertMove(src, dest)
                     if (eval > maxEval):
                         maxEval = eval
@@ -157,15 +159,16 @@ class Engine:
             for src in allMoves:
                 for dest in allMoves[src]:
                     self.board.movePiece(src, dest)
-                    if (self.movements.isMate(self.getOppositeColor(color))):
-                        minEval = -CHECKMATE
-                        bestMove = [[src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(minEval)]]
-                        toBreak = True
-                        self.board.revertMove(src, dest)
-                        # print("Checkmate was found!!!")
-                        break
-                    eval, temp = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
+                    # if (self.movements.isMate(self.getOppositeColor(color))):
+                    #     minEval = -CHECKMATE
+                    #     bestMove = [[src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(minEval)]]
+                    #     toBreak = True
+                    #     self.board.revertMove(src, dest)
+                    #     # print("Checkmate was found!!!")
+                    #     break
                     self.posEval += 1
+                    self.accs.print_and_update("Positions evaluated: " + str(self.posEval) + "   Searching at depth: " + str(depth), len("Positions evaluated:    Searching at depth: ") + len(str(self.posEval - 1)) + len(str(depth)), 'p')
+                    eval, temp = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
                     self.board.revertMove(src, dest)
                     if (eval < minEval):
                         minEval = eval

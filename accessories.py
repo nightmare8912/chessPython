@@ -67,3 +67,19 @@ class Accessories:
 
     def playSound(self):
         mixer.music.play()
+    
+    def print_and_update(self, text, lenInitial, color = 'w'):
+        if (color.lower() == 'w'):
+            print("\r" + " " * lenInitial + "\r" + text, end='', flush=True)
+        else:
+            match color.lower():
+                case "r":
+                    print(RED + "\r" + " " * lenInitial + "\r" + text + RESET, end = "", flush = True)
+                case "g":
+                    print(GREEN + "\r" + " " * lenInitial + "\r" + text + RESET, end = "", flush = True)
+                case "y":
+                    print(YELLOW + "\r" + " " * lenInitial + "\r" + text + RESET, end = "", flush = True)
+                case "b":
+                    print(BLUE + "\r" + " " * lenInitial + "\r" + text + RESET, end = "", flush = True)
+                case "p":
+                    print(PURPLE + "\r" + " " * lenInitial + "\r" + text + RESET, end = "", flush = True)

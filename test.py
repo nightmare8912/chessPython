@@ -1,5 +1,21 @@
-import accessories as acs
+def revText(demostr):
+    file = open('demo.txt', 'w')
+    file.write(demostr)
+    file.close()
+    newFile = open('demo.txt', 'r')
+    txt = newFile.read()
+    print(txt)
 
-accs = acs.Accessories()
+    list = txt.split()
+    print(list)
+    ans = ""
+    for word in list:
+        if (word[0] == txt[0]):
+            word = ''.join(reversed(word))
+        ans +=  word + " "
 
-accs.playSound()
+    print(ans)
+    
+
+
+revText("INDIA IS MY COUNTRY")
