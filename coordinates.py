@@ -1,11 +1,11 @@
-import copy
+# import copy
 import math
-import sys
+# import sys
 class Coordinates:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        sys.setrecursionlimit(10000)
+        # sys.setrecursionlimit(10000)
 
     def compare(self, c):
         return self.x == c.x and self.y == c.y
@@ -18,7 +18,8 @@ class Coordinates:
         self.y = y
 
     def createNewCopy(self):
-        return copy.deepcopy(self)
+        # return copy.deepcopy(self)
+        return Coordinates(self.x, self.y)
 
     def printCoordinates(self):
         print("(", self.y, ", ", self.x, "),", end = "")

@@ -46,7 +46,8 @@ class Board:
             self.drawBoardWithMovesForWhite(moves)
         else:
             self.drawBoardWithMovesForBlack(moves)
-
+    
+    # this is probably the most messy code i have written in my life, and i ve no idea how on earth is this working
     def drawBoardWithMovesForWhite(self, moves):
         print("\n")
         self.accs.printSpaces(20)
@@ -383,13 +384,15 @@ class Board:
             return pie.Pieces("", "", "", "")
     
     def logMoves(self, src, dest):
-        self.movesLog.append([copy.deepcopy(self.positions[src.x][src.y]), copy.deepcopy(self.positions[dest.x][dest.y])])
+        # self.movesLog.append([copy.deepcopy(self.positions[src.x][src.y]), copy.deepcopy(self.positions[dest.x][dest.y])])
+        self.movesLog.append([self.positions[src.x][src.y].createNewCopy(), self.positions[dest.x][dest.y].createNewCopy()])
 
     def movePiece(self, src, dest):
 
         self.positions[src.x][src.y].timesMoved += 1
         self.logMoves(src, dest)
-        self.positions[dest.x][dest.y] = copy.deepcopy(self.positions[src.x][src.y])
+        # self.positions[dest.x][dest.y] = copy.deepcopy(self.positions[src.x][src.y])
+        self.positions[dest.x][dest.y] = self.positions[src.x][src.y].createNewCopy()
         self.positions[src.x][src.y].pieceType = ""
         self.positions[src.x][src.y].pieceColor = ""
         self.positions[src.x][src.y].timesMoved = 0
@@ -397,9 +400,15 @@ class Board:
     def revertMove(self, src, dest):
 
         lastMovements = self.movesLog.pop()
-        pieceEliminated = lastMovements.pop()
-        pieceMoved = lastMovements.pop()
+        # pieceEliminated = lastMovements.pop()
+        pieceEliminated = lastMovements[1]
+        # pieceMoved = lastMovements.pop()
+        pieceMoved = lastMovements[0]
 
-        self.positions[dest.x][dest.y] = copy.deepcopy(pieceEliminated)
-        self.positions[src.x][src.y] = copy.deepcopy(pieceMoved)
+        # self.positions[dest.x][dest.y] = copy.deepcopy(pieceEliminated)
+        # self.positions[dest.x][dest.y] = pieceEliminated.createNewCopy()
+        self.positions[dest.x][dest.y] = pieceEliminated
+        # self.positions[src.x][src.y] = copy.deepcopy(pieceMoved)
+        # self.positions[src.x][src.y] = pieceMoved.createNewCopy()
+        self.positions[src.x][src.y] = pieceMoved
         self.positions[src.x][src.y].timesMoved -= 1

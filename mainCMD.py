@@ -6,8 +6,7 @@ class MainCMD:
 
         play = pl.Play()
         opt = -1
-        # opt = int(input("Enter 1 to play with friend, 2 to play with computer, 3 for computer vs computer: "))
-        opt = 3
+        opt = int(input("Enter 1 to play with friend, 2 to play with computer, 3 for computer vs computer: "))
         match opt:
             case 1:
                 play.humanPlaysHuman()

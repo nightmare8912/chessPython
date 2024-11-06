@@ -1,1 +1,3 @@
-ans = ""
+
+        print(n)
+        printer(n)

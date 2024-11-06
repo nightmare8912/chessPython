@@ -1,4 +1,4 @@
-from pygame import mixer
+# from pygame import mixer
 RED = '\033[91m'
 GREEN = '\033[92m'
 YELLOW = '\033[93m'
@@ -17,9 +17,9 @@ class Accessories:
             "queen" : 9,
             "king" : 100
         }
-        mixer.init()
-        mixer.music.load(".\\mixkit-confirmation-tone-2867.wav")
-        mixer.music.set_volume(0.7)
+        # mixer.init()
+        # mixer.music.load(".\\mixkit-confirmation-tone-2867.wav")
+        # mixer.music.set_volume(0.7)
         
     def printInColor(self, text, color):
         match color.lower():
@@ -66,7 +66,8 @@ class Accessories:
             print(" ", end = "")
 
     def playSound(self):
-        mixer.music.play()
+        # mixer.music.play()
+        pass
     
     def print_and_update(self, text, lenInitial, color = 'w'):
         if (color.lower() == 'w'):

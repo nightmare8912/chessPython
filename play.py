@@ -4,7 +4,6 @@ import coordinates
 import accessories
 from ai import engine as eng
 from ai import evaluator as ev
-import time
 import sys
 class Play:
     def __init__(self):
@@ -55,8 +54,12 @@ class Play:
                 break
             print("\n\nIts ", self.turn, "'s turn to move")
             self.accs.printInColor("Current score is: " + str(self.evaluator.evaluateBoard()) + "\n", "b")
-            src.y = int(input("Enter x pos of piece to move: "))
-            src.x = int(input("Enter y pos of piece to move: "))
+            try:
+                src.y = int(input("Enter x pos of piece to move: "))
+                src.x = int(input("Enter y pos of piece to move: "))
+            except:
+                self.accs.printInColor("Enter valid value", 'r')
+                continue
             if (not src.isValid()):
                     self.accs.printInColor("Enter a valid move!", "r")
                     continue
@@ -69,11 +72,19 @@ class Play:
                 i.printCoordinates()
             print()
             print("You want to move ", self.board.positions[src.x][src.y].pieceType, " of color ", self.board.getPieceAt(src).pieceColor)
-            dest.y = int(input("Enter x pos of where you want to to move(-1 to change piece): "))
-            if (dest.y == -1):
+            try:
+                dest.y = int(input("Enter x pos of where you want to to move(-1 to change piece): "))
+                if (dest.y == -1):
+                    continue
+            except:
+                self.accs.printInColor("Enter valid value", 'r')
                 continue
-            dest.x = int(input("Enter y pos of where you want to to move(-1 to change piece): "))
-            if (dest.x == -1):
+            try:
+                dest.x = int(input("Enter y pos of where you want to to move(-1 to change piece): "))
+                if (dest.x == -1):
+                    continue
+            except:
+                self.accs.printInColor("Enter valid value", 'r')
                 continue
             if (not dest.isValid()):
                     self.accs.printInColor("Enter a valid move!", "r")
@@ -92,6 +103,10 @@ class Play:
         dest = coordinates.Coordinates(-1, -1)
 
         selectedColor = input("Please enter your color (White for white, Black for black(not case sensitive)): ").lower()
+        if (selectedColor[0] == 'b'):
+            selectedColor = 'black'
+        elif (selectedColor[0] == 'w'):
+            selectedColor = "white"
         intelligence = int(input("Please enter the intelligence of computer(higher intelligence means higher think time)(recommended -> 3): "))
         self.engine = eng.Engine(self.board, self.movements, self.getOppositeTurn(selectedColor), intelligence)
         while(True):
@@ -105,12 +120,15 @@ class Play:
             self.accs.printInColor("Current score is: " + str(self.evaluator.evaluateBoard()) + "\n", "b")
 
             if (self.turn == selectedColor):
-                src.y = int(input("Enter x pos of piece to move: "))
-                src.x = int(input("Enter y pos of piece to move: "))
-                if (not src.isValid()):
-                    self.accs.printInColor("Enter a valid move!", "r")
+                try:
+                    src.y = int(input("Enter x pos of piece to move: "))
+                    src.x = int(input("Enter y pos of piece to move: "))
+                    if (not src.isValid()):
+                        self.accs.printInColor("Enter a valid move!", "r")
+                        continue
+                except:
+                    self.accs.printInColor("Enter valid value", 'r')
                     continue
-
                 possibleMoves = self.movements.getPossibleMoves(src)
 
                 self.board.drawBoardWithMoves(self.turn, possibleMoves)
@@ -119,10 +137,18 @@ class Play:
                     i.printCoordinates()
                 print()
                 print("You want to move ", self.board.positions[src.x][src.y].pieceType, " of color ", self.board.getPieceAt(src).pieceColor)
-                dest.y = int(input("Enter x pos of where you want to to move(-1 to change piece): "))
-                if (dest.y == -1):
+                try:
+                    dest.y = int(input("Enter x pos of where you want to to move(-1 to change piece): "))
+                    if (dest.y == -1):
+                        continue
+                except:
+                    self.accs.printInColor("Enter valid value", 'r')
                     continue
-                dest.x = int(input("Enter y pos of where you want to to move(-1 to change piece): "))
+                try:
+                    dest.x = int(input("Enter y pos of where you want to to move(-1 to change piece): "))
+                except:
+                    self.accs.printInColor("Enter valid value", 'r')
+                    continue
                 if (dest.x == -1):
                     continue
                 if (not dest.isValid()):
@@ -143,10 +169,8 @@ class Play:
     def computerPlaysComputer(self):
         src = coordinates.Coordinates(-1, -1)
         dest = coordinates.Coordinates(-1, -1)
-        # intelligence1 = int(input("Please enter the intelligence of computer1(higher intelligence means higher think time)(1-3): "))
-        # intelligence2 = int(input("Please enter the intelligence of computer2(higher intelligence means higher think time)(1-3): "))
-        intelligence1 = 3
-        intelligence2 = 3
+        intelligence1 = int(input("Please enter the intelligence of computer1(higher intelligence means higher think time)(1-3): "))
+        intelligence2 = int(input("Please enter the intelligence of computer2(higher intelligence means higher think time)(1-3): "))
         self.engine1 = eng.Engine(self.board, self.movements, "white", intelligence1)
         self.engine2 = eng.Engine(self.board, self.movements, "black", intelligence2)
         while(True):

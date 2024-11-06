@@ -25,23 +25,21 @@ class Engine:
 
         self.posEval = self.branchesPruned = 0
         self.start = time.time()
-        # bestScore, bestMoves = self.minimax(self.engColor, self.depth)
-        # bestScore, bestMoves = self.alphabeta1(self.engColor, -9999, 9999, self.depth)
         bestScore, bestMoves = self.alphabeta(self.engColor, -9999, 9999, self.depth)
-
-        # self.printMoves(bestMoves)
-        # self.accs.printInColor("Possible best moves: " + str(len(bestMoves)) + "\n", 'g')
 
         self.end = time.time()
         self.accs.printInColor("\nPositions Evaluated: " + str(self.posEval) + "\n", "y")
         self.accs.printInColor("Branches Pruned: " + str(self.branchesPruned) + "\n", "y")
+        
         random.shuffle(bestMoves)
         
         self.accs.printInColor("Best score: " + str(bestScore) + "\n", 'g')
-        self.accs.printInColor("Think time: " + str(self.end - self.start) + " seconds or " + str((self.end - self.start) / 60) + " minutes\n", 'p')
+        self.accs.printInColor("Think time: " + str(round(self.end - self.start, 2)) + " seconds or " + str(round((self.end - self.start) / 60, 2)) + " minutes\n", 'p')
         try:
-            src = bestMoves[0][0]
-            dest = bestMoves[0][1]
+            src.x = bestMoves[0][0][0]
+            src.y = bestMoves[0][0][1]
+            dest.x = bestMoves[0][1][0]
+            dest.y = bestMoves[0][1][1]
         except:
             my_dict = self.getAllMoves(self.engColor)
             src = random.choice(list(my_dict))
@@ -52,73 +50,10 @@ class Engine:
         self.accs.playSound()
 
         return src, dest
-    
-    def minimax(self, color, depth):
-        print(f"Minimax - Color: {color}, Depth: {depth}")
-        if (depth == 0):
-            return self.evaluator.evaluateBoard(), []
-        # self.posEval += 1
-        allMoves = self.getAllMoves(color)
-        bestMove = []
-        toBreak = False
-        if (self.isMaximize(color)):
-            maxEval = -9999
-            for src in allMoves:
-                for dest in allMoves[src]:
-                    self.board.movePiece(src, dest)
-                    if (self.movements.isMate(self.getOppositeColor(color))):
-                        maxEval = CHECKMATE
-                        bestMove = [[src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(maxEval)]]
-                        toBreak = True
-                        self.board.revertMove(src, dest)
-                        print("Checkmate was found!!!")
-                        break
-                    self.posEval += 1
-                    print("Positions evaluated: ", self.posEval, flush = True)
-                    eval, temp = self.minimax(self.getOppositeColor(color), depth - 1)
-                    self.board.revertMove(src, dest)
-                    if (eval > maxEval):
-                        maxEval = eval
-                        bestMove = [[src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(maxEval)]]
-                    elif (eval == maxEval):
-                        bestMove.append([src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(maxEval)])
-                if (toBreak):
-                    break
-            print(f"MaxEval: {maxEval}, BestMove: ")
-            self.printMoves(bestMove)
-            return maxEval, bestMove
-        
-        else:
-            minEval = 9999
-            for src in allMoves:
-                for dest in allMoves[src]:
-                    self.board.movePiece(src, dest)
-                    if (self.movements.isMate(self.getOppositeColor(color))):
-                        minEval = -CHECKMATE
-                        bestMove = [[src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(minEval)]]
-                        toBreak = True
-                        self.board.revertMove(src, dest)
-                        print("Checkmate was found!!!")
-                        break
-                    eval, temp = self.minimax(self.getOppositeColor(color), depth - 1)
-                    self.posEval += 1
-                    self.board.revertMove(src, dest)
-                    if (eval < minEval):
-                        minEval = eval
-                        bestMove = [[src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(minEval)]]
-                    elif (eval == minEval):
-                        bestMove.append([src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(minEval)])
-                if (toBreak):
-                    break
-            print(f"MinEval: {minEval}, BestMove: ")
-            self.printMoves(bestMove)
-            return minEval, bestMove
-
+ 
     def alphabeta(self, color, alpha, beta, depth):
-        # print(f"ABPruning 1- Color: {color}, Alpha: {alpha}, Beta: {beta}, Depth: {depth}")
         if (depth == 0):
-            return self.evaluator.evaluateBoard(), []
-        # self.posEval += 1
+            return self.evaluator.evaluateBoard(), [[]]
         allMoves = self.getAllMoves(color)
         bestMove = []
         toBreak = False
@@ -127,23 +62,20 @@ class Engine:
             for src in allMoves:
                 for dest in allMoves[src]:
                     self.board.movePiece(src, dest)
-                    # if (self.movements.isMate(self.getOppositeColor(color))):
-                    #     maxEval = CHECKMATE
-                    #     bestMove = [[src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(maxEval)]]
-                    #     toBreak = True
-                    #     self.board.revertMove(src, dest)
-                    #     # print("Checkmate was found!!!")
-                    #     break
                     self.posEval += 1
-                    toPrint = "Positions evaluated: " + str(self.posEval) + "   Searching at depth: " + str(depth) + "   Positions per second: " + str(self.posEval / (time.time() - self.start))
-                    self.accs.print_and_update(toPrint, len(toPrint), 'p')
-                    eval, temp = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
+                    try:
+                        # putting this is try except because the time (time.time() - self.start) can be 0 sometimes, as the moves are made very fast so this can raise error
+                        toPrint = "Positions evaluated: " + str(self.posEval) + "   Searching at depth: " + str(depth) + "   Positions per second: " + str(self.posEval / (time.time() - self.start))
+                        self.accs.print_and_update(toPrint, len(toPrint), 'p')
+                    except ZeroDivisionError:
+                        pass
+                    eval, _ = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
                     self.board.revertMove(src, dest)
                     if (eval > maxEval):
                         maxEval = eval
-                        bestMove = [[src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(maxEval)]]
+                        bestMove = [((src.x, src.y), (dest.x, dest.y), maxEval)]
                     elif (eval == maxEval):
-                        bestMove.append([src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(maxEval)])
+                        bestMove.append(((src.x, src.y), (dest.x, dest.y), maxEval))
                     alpha = max(alpha, eval)
                     if (beta < alpha):
                         self.branchesPruned += 1
@@ -151,8 +83,6 @@ class Engine:
                         break
                 if (toBreak):
                     break
-            # print(f"MaxEval: {maxEval}, Alpha: {alpha}, Beta: {beta}, BestMove:")
-            # self.printMoves(bestMove)
             return maxEval, bestMove
         
         else:
@@ -160,23 +90,20 @@ class Engine:
             for src in allMoves:
                 for dest in allMoves[src]:
                     self.board.movePiece(src, dest)
-                    # if (self.movements.isMate(self.getOppositeColor(color))):
-                    #     minEval = -CHECKMATE
-                    #     bestMove = [[src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(minEval)]]
-                    #     toBreak = True
-                    #     self.board.revertMove(src, dest)
-                    #     # print("Checkmate was found!!!")
-                    #     break
                     self.posEval += 1
-                    toPrint = "Positions evaluated: " + str(self.posEval) + "   Searching at depth: " + str(depth) + "   Positions per second: " + str(self.posEval / (time.time() - self.start))
-                    self.accs.print_and_update(toPrint, len(toPrint), 'p')
-                    eval, temp = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
+                    try:
+                        # putting this is try except because the time (time.time() - self.start) can be 0 sometimes, as the moves are made very fast so this can raise error
+                        toPrint = "Positions evaluated: " + str(self.posEval) + "   Searching at depth: " + str(depth) + "   Positions per second: " + str(self.posEval / (time.time() - self.start))
+                        self.accs.print_and_update(toPrint, len(toPrint), 'p')
+                    except ZeroDivisionError:
+                        pass
+                    eval, _ = self.alphabeta(self.getOppositeColor(color), alpha, beta, depth - 1)
                     self.board.revertMove(src, dest)
                     if (eval < minEval):
                         minEval = eval
-                        bestMove = [[src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(minEval)]]
+                        bestMove = [((src.x, src.y), (dest.x, dest.y), minEval)]
                     if (eval == minEval):
-                        bestMove.append([src.createNewCopy(), dest.createNewCopy(), copy.deepcopy(minEval)])
+                        bestMove.append(((src.x, src.y), (dest.x, dest.y), minEval))
                     beta = min(beta, eval)
                     if (beta < alpha):
                         self.branchesPruned += 1
@@ -184,8 +111,6 @@ class Engine:
                         break
                 if (toBreak):
                     break
-            # print(f"MinEval: {minEval}, Alpha: {alpha}, Beta: {beta}, BestMove:")
-            # self.printMoves(bestMove)
             return minEval, bestMove
 
     def printMoves(self, moves):
@@ -198,7 +123,7 @@ class Engine:
 
     def isMaximize(self, color):
         return color == "white"
-    
+
     def getAllMoves(self, color):
         allMoves = {}
         coord = coordinates.Coordinates(-1, -1)
@@ -206,11 +131,10 @@ class Engine:
             for j in range(8):
                 coord.assignValue(i, j)
                 if (self.board.getPieceAt(coord).pieceColor == color):
-                    if (len(self.movements.getPossibleMoves(coord)) > 0):
-                        allMoves[coord.createNewCopy()] = self.movements.getPossibleMoves(coord)
+                    possibleMoves = self.movements.getPossibleMoves(coord)
+                    if (len(possibleMoves) > 0):
+                        allMoves[coord.createNewCopy()] = possibleMoves
         return allMoves
     
     def getOppositeColor(self, color):
-        if (color == "white"):
-            return "black"
-        return "white"
+        return "black" if color == "white" else "white"

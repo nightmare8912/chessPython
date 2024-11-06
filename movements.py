@@ -1,8 +1,4 @@
-import pieces
-import copy
 import math
-import time
-import board as bd
 import accessories
 import coordinates
 
@@ -16,22 +12,17 @@ class Movements:
     def getAllPossibleMoves(self, src):
         # all possible moves with that piece, but check is not considered
         allMovesWithCheck = []
+        move_functions = {
+            "pawn": self.pawnMovements,
+            "rook": self.rookMovements,
+            "knight": self.knightMovements,
+            "bishop": self.bishopMovements,
+            "king": self.kingMovements,
+            "queen": self.queenMovements,
+        }
 
-        if (self.board.getPieceAt(src).pieceType == "pawn"):
-            allMovesWithCheck = self.pawnMovements(src)
-        elif (self.board.getPieceAt(src).pieceType == "rook"):
-            allMovesWithCheck = self.rookMovements(src)
-        elif (self.board.getPieceAt(src).pieceType == "knight"):
-            allMovesWithCheck = self.knightMovements(src)
-        elif (self.board.getPieceAt(src).pieceType == "bishop"):
-            allMovesWithCheck = self.bishopMovements(src)
-        elif (self.board.getPieceAt(src).pieceType == "king"):
-            allMovesWithCheck = self.kingMovements(src)
-        elif (self.board.getPieceAt(src).pieceType == "queen"):
-            allMovesWithCheck = self.queenMovements(src)
-        else:
-            print("match not found, as piecetype = ", self.board.getPieceAt(src).pieceType)
-        
+        piece = self.board.getPieceAt(src)
+        allMovesWithCheck = move_functions.get(piece.pieceType, lambda x: [])(src)
         return allMovesWithCheck
 
     def getPossibleMoves(self, src):
@@ -41,7 +32,7 @@ class Movements:
         if len(allMovesWithoutCheck) == 0:
             return []
 
-        # all moves considered for that piece including check(as of now both are same, will add check feature in future)
+        # all moves considered for that piece including check
         allMovesWithCheck = []
         for move in allMovesWithoutCheck:
             if (self.isMovementPossibleConsideringOnlyCheckAndIntersections(src, move)):
@@ -70,8 +61,8 @@ class Movements:
         colorFactor = 1
         coord = coordinates.Coordinates(-1, -1)
         possibleMoves = []
-
-        if (self.board.getPieceAt(src).pieceColor == "black"):
+        pieceAtSrc = self.board.getPieceAt(src)
+        if (pieceAtSrc.pieceColor == "black"):
             colorFactor = -1
 
         coord.assignValue(src.x - colorFactor, src.y)
@@ -81,15 +72,15 @@ class Movements:
 
         if (coord.isValid() and not self.isOccupied(coord)):
             coord.assignValue(src.x - (colorFactor * 2), src.y)
-            if (coord.isValid() and not self.isOccupied(coord) and self.board.getPieceAt(src).timesMoved == 0):
+            if (coord.isValid() and not self.isOccupied(coord) and pieceAtSrc.timesMoved == 0):
                 possibleMoves.append(coord.createNewCopy())
         
         coord.assignValue(src.x - colorFactor, src.y - 1)
-        if (coord.isValid() and self.isOccupied(coord) and self.board.getPieceAt(coord).pieceColor != self.board.getPieceAt(src).pieceColor):
+        if (coord.isValid() and self.isOccupied(coord) and self.board.getPieceAt(coord).pieceColor != pieceAtSrc.pieceColor):
             possibleMoves.append(coord.createNewCopy())
         
         coord.assignValue(src.x - colorFactor, src.y + 1)
-        if (coord.isValid() and self.isOccupied(coord) and self.board.getPieceAt(coord).pieceColor != self.board.getPieceAt(src).pieceColor):
+        if (coord.isValid() and self.isOccupied(coord) and self.board.getPieceAt(coord).pieceColor != pieceAtSrc.pieceColor):
             possibleMoves.append(coord.createNewCopy())
         
         return possibleMoves
@@ -97,6 +88,7 @@ class Movements:
     def rookMovements(self, src):
 
         coord = coordinates.Coordinates(-1, -1)
+        pieceAtSrc = self.board.getPieceAt(src)
         possibleMoves = []
 
         i = src.x + 1
@@ -105,7 +97,7 @@ class Movements:
         while (i <= 7):
             coord.assignValue(i, j)
             if (self.isOccupied(coord)):
-                if (self.board.getPieceAt(coord).pieceColor != self.board.getPieceAt(src).pieceColor):
+                if (self.board.getPieceAt(coord).pieceColor != pieceAtSrc.pieceColor):
                     possibleMoves.append(coord.createNewCopy())
                 break
             possibleMoves.append(coord.createNewCopy())
@@ -117,7 +109,7 @@ class Movements:
         while (i >= 0):
             coord.assignValue(i, j)
             if (self.isOccupied(coord)):
-                if (self.board.getPieceAt(coord).pieceColor != self.board.getPieceAt(src).pieceColor):
+                if (self.board.getPieceAt(coord).pieceColor != pieceAtSrc.pieceColor):
                     possibleMoves.append(coord.createNewCopy())
                 break
             possibleMoves.append(coord.createNewCopy())
@@ -129,7 +121,7 @@ class Movements:
         while (j <= 7):
             coord.assignValue(i, j)
             if (self.isOccupied(coord)):
-                if (self.board.getPieceAt(coord).pieceColor != self.board.getPieceAt(src).pieceColor):
+                if (self.board.getPieceAt(coord).pieceColor != pieceAtSrc.pieceColor):
                     possibleMoves.append(coord.createNewCopy())
                 break
             possibleMoves.append(coord.createNewCopy())
@@ -141,7 +133,7 @@ class Movements:
         while (j >= 0):
             coord.assignValue(i, j)
             if (self.isOccupied(coord)):
-                if (self.board.getPieceAt(coord).pieceColor != self.board.getPieceAt(src).pieceColor):
+                if (self.board.getPieceAt(coord).pieceColor != pieceAtSrc.pieceColor):
                     possibleMoves.append(coord.createNewCopy())
                 break
             possibleMoves.append(coord.createNewCopy())
@@ -151,6 +143,7 @@ class Movements:
 
     def knightMovements(self, src):
         coord = coordinates.Coordinates(-1, -1)
+        pieceAtSrc = self.board.getPieceAt(src)
         possibleMoves = []
 
         i = src.x + 1
@@ -158,16 +151,15 @@ class Movements:
         coord.assignValue(i, j)
         
         if coord.isValid():
-            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != self.board.getPieceAt(src).pieceColor):
+            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != pieceAtSrc.pieceColor):
                 possibleMoves.append(coord.createNewCopy())
-
 
         i = src.x - 1
         j = src.y + 2
         coord.assignValue(i, j)
 
         if coord.isValid():
-            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != self.board.getPieceAt(src).pieceColor):
+            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != pieceAtSrc.pieceColor):
                 possibleMoves.append(coord.createNewCopy())
 
 
@@ -176,7 +168,7 @@ class Movements:
         coord.assignValue(i, j)
 
         if coord.isValid():
-            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != self.board.getPieceAt(src).pieceColor):
+            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != pieceAtSrc.pieceColor):
                 possibleMoves.append(coord.createNewCopy())
 
 
@@ -185,7 +177,7 @@ class Movements:
         coord.assignValue(i, j)
 
         if coord.isValid():
-            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != self.board.getPieceAt(src).pieceColor):
+            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != pieceAtSrc.pieceColor):
                 possibleMoves.append(coord.createNewCopy())
 
 
@@ -194,7 +186,7 @@ class Movements:
         coord.assignValue(i, j)
 
         if coord.isValid():
-            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != self.board.getPieceAt(src).pieceColor):
+            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != pieceAtSrc.pieceColor):
                 possibleMoves.append(coord.createNewCopy())
 
 
@@ -203,7 +195,7 @@ class Movements:
         coord.assignValue(i, j)
 
         if coord.isValid():
-            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != self.board.getPieceAt(src).pieceColor):
+            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != pieceAtSrc.pieceColor):
                 possibleMoves.append(coord.createNewCopy())
 
         i = src.x - 2
@@ -211,7 +203,7 @@ class Movements:
         coord.assignValue(i, j)
 
         if coord.isValid():
-            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != self.board.getPieceAt(src).pieceColor):
+            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != pieceAtSrc.pieceColor):
                 possibleMoves.append(coord.createNewCopy())
 
         i = src.x + 2
@@ -219,13 +211,14 @@ class Movements:
         coord.assignValue(i, j)
 
         if coord.isValid():
-            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != self.board.getPieceAt(src).pieceColor):
+            if (self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor  != pieceAtSrc.pieceColor):
                 possibleMoves.append(coord.createNewCopy())
 
         return possibleMoves
 
     def bishopMovements(self, src):
         coord = coordinates.Coordinates(-1, -1)
+        pieceAtSrc = self.board.getPieceAt(src)
         possibleMoves = []
 
         i = src.x + 1
@@ -234,7 +227,7 @@ class Movements:
         while(i <= 7 and j <= 7):
             coord.assignValue(i, j)
             if (self.isOccupied(coord)):
-                if (self.board.getPieceAt(coord).pieceColor != self.board.getPieceAt(src).pieceColor):
+                if (self.board.getPieceAt(coord).pieceColor != pieceAtSrc.pieceColor):
                     possibleMoves.append(coord.createNewCopy())
                 break
             possibleMoves.append(coord.createNewCopy())
@@ -247,7 +240,7 @@ class Movements:
         while(i >= 0 and j <= 7):
             coord.assignValue(i, j)
             if (self.isOccupied(coord)):
-                if (self.board.getPieceAt(coord).pieceColor != self.board.getPieceAt(src).pieceColor):
+                if (self.board.getPieceAt(coord).pieceColor != pieceAtSrc.pieceColor):
                     possibleMoves.append(coord.createNewCopy())
                 break
             possibleMoves.append(coord.createNewCopy())
@@ -260,7 +253,7 @@ class Movements:
         while(i >= 0 and j >= 0):
             coord.assignValue(i, j)
             if (self.isOccupied(coord)):
-                if (self.board.getPieceAt(coord).pieceColor != self.board.getPieceAt(src).pieceColor):
+                if (self.board.getPieceAt(coord).pieceColor != pieceAtSrc.pieceColor):
                     possibleMoves.append(coord.createNewCopy())
                 break
             possibleMoves.append(coord.createNewCopy())
@@ -274,7 +267,7 @@ class Movements:
         while(i <= 7 and j >= 0):
             coord.assignValue(i, j)
             if (self.isOccupied(coord)):
-                if (self.board.getPieceAt(coord).pieceColor != self.board.getPieceAt(src).pieceColor):
+                if (self.board.getPieceAt(coord).pieceColor != pieceAtSrc.pieceColor):
                     possibleMoves.append(coord.createNewCopy())
                 break
             possibleMoves.append(coord.createNewCopy())
@@ -293,29 +286,41 @@ class Movements:
 
     def kingMovements(self, src):
         coord = coordinates.Coordinates(-1, -1)
+        pieceAtSrc = self.board.getPieceAt(src)
         possibleMoves = []
-        queensMove = self.queenMovements(src)
 
-        for i in queensMove:
-            if (i.getDistance(src, i) == 1 or i.getDistance(src, i) == math.sqrt(2)):
-                possibleMoves.append(i.createNewCopy())
+        # Define the relative movements for a king
+        moves = [
+            (1, 0), (1, 1), (0, 1), (-1, 1),
+            (-1, 0), (-1, -1), (0, -1), (1, -1)
+        ]
+
+        for move in moves:
+            i = src.x + move[0]
+            j = src.y + move[1]
+            coord.assignValue(i, j)
+
+            if coord.isValid():
+                if self.isOccupied(coord) == False or self.board.getPieceAt(coord).pieceColor != pieceAtSrc.pieceColor:
+                    possibleMoves.append(coord.createNewCopy())
+
         return possibleMoves
 
-    def getThreatsAt(self, pos):
 
-        threatsFrom = []
-        coord = coordinates.Coordinates(-1, -1)
-        for i in range(8):
-            for j in range(8):
-                coord.assignValue(i, j) 
-                if (self.board.getPieceAt(coord).pieceColor == "" or (self.board.getPieceAt(coord).pieceColor == self.board.getPieceAt(pos).pieceColor)):
-                    continue
-                possibleMoves = self.getAllPossibleMoves(coord)
-                for k in possibleMoves:
-                    if ((k.x == pos.x) and (k.y == pos.y)):
-                        threatsFrom.append(coord.createNewCopy())
-        return threatsFrom
+    # def getThreatsAt(self, pos):
 
+    #     threatsFrom = []
+    #     coord = coordinates.Coordinates(-1, -1)
+    #     for i in range(8):
+    #         for j in range(8):
+    #             coord.assignValue(i, j) 
+    #             if (self.board.getPieceAt(coord).pieceColor == "" or (self.board.getPieceAt(coord).pieceColor == self.board.getPieceAt(pos).pieceColor)):
+    #                 continue
+    #             possibleMoves = self.getAllPossibleMoves(coord)
+    #             for k in possibleMoves:
+    #                 if ((k.x == pos.x) and (k.y == pos.y)):
+    #                     threatsFrom.append(coord.createNewCopy())
+    #     return threatsFrom
 
     def getKingsLocn(self, color):
         for i in range(8):
@@ -325,7 +330,18 @@ class Movements:
         return coordinates.Coordinates(-1, -1)
 
     def isCheck(self, kingPos):
-        return (len(self.getThreatsAt(kingPos)) != 0)
+        # return (len(self.getThreatsAt(kingPos)) != 0)
+        coord = coordinates.Coordinates(-1, -1)
+        for i in range(8):
+            for j in range(8):
+                coord.assignValue(i, j)
+                if (self.board.getPieceAt(coord).pieceColor == "" or (self.board.getPieceAt(coord).pieceColor == self.board.getPieceAt(kingPos).pieceColor)):
+                    continue
+                possibleMoves = self.getAllPossibleMoves(coord)
+                for k in possibleMoves:
+                    if ((k.x == kingPos.x) and (k.y == kingPos.y)):
+                        return True
+        return False
         
     def getValidCastlingMoves(self, src):
 
@@ -374,13 +390,9 @@ class Movements:
         allPossibleMoves = []
         coord = coordinates.Coordinates(-1, -1)
         for i in range(8):
-            for j in range(8):
-                if (len(allPossibleMoves) > 0):
-                    return False
+            for j in range(8): 
                 coord.assignValue(i, j)
                 if (self.board.getPieceAt(coord).pieceColor == color):
                     if (len(self.getPossibleMoves(coord)) != 0):
-                        allPossibleMoves.append(self.getPossibleMoves(coord))
                         return False
-        
         return True
