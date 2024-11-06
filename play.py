@@ -108,7 +108,9 @@ class Play:
         elif (selectedColor[0] == 'w'):
             selectedColor = "white"
         intelligence = int(input("Please enter the intelligence of computer(higher intelligence means higher think time)(recommended -> 3): "))
-        self.engine = eng.Engine(self.board, self.movements, self.getOppositeTurn(selectedColor), intelligence)
+        dynamicDepthEnabled = input("Enable dynamic depth(allows intelligence to adjust its depth, based on time consumed)?(yes/no): ")
+        dynamicDepthEnabled = True if dynamicDepthEnabled[0].lower() == 'y' else False
+        self.engine = eng.Engine(self.board, self.movements, self.getOppositeTurn(selectedColor), intelligence, dynamicDepthEnabled)
         while(True):
             self.board.drawBoard(selectedColor)
             if (self.movements.isMate(self.turn)):
@@ -169,10 +171,14 @@ class Play:
     def computerPlaysComputer(self):
         src = coordinates.Coordinates(-1, -1)
         dest = coordinates.Coordinates(-1, -1)
-        intelligence1 = int(input("Please enter the intelligence of computer1(higher intelligence means higher think time)(1-3): "))
+        intelligence1 = int(input("Please enter the intelligence of eng 1(higher intelligence means higher think time)(1-3): "))
+        dynamicDepthEnabled1 = input("Enable dynamic depth for eng 1(allows intelligence to adjust its depth, based on time consumed)?(yes/no): ")
+        dynamicDepthEnabled1 = True if dynamicDepthEnabled1[0].lower() == 'y' else False
         intelligence2 = int(input("Please enter the intelligence of computer2(higher intelligence means higher think time)(1-3): "))
-        self.engine1 = eng.Engine(self.board, self.movements, "white", intelligence1)
-        self.engine2 = eng.Engine(self.board, self.movements, "black", intelligence2)
+        dynamicDepthEnabled2 = input("Enable dynamic depth for eng 2(allows intelligence to adjust its depth, based on time consumed)?(yes/no): ")
+        dynamicDepthEnabled2 = True if dynamicDepthEnabled2[0].lower() == 'y' else False
+        self.engine1 = eng.Engine(self.board, self.movements, "white", intelligence1, dynamicDepthEnabled1)
+        self.engine2 = eng.Engine(self.board, self.movements, "black", intelligence2, dynamicDepthEnabled2)
         while(True):
             self.board.drawBoard(self.turn)
             if (self.movements.isMate(self.turn)):

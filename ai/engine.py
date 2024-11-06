@@ -10,16 +10,20 @@ import copy
 CHECKMATE = 99999
 
 class Engine:
-    def __init__(self, board, movements, engColor, intelligence):
+    def __init__(self, board, movements, engColor, intelligence, dynamicDepthEnabled):
         self.board = board
         self.movements = movements
         self.engColor = engColor
         self.depth = intelligence
+        self.dynamicDepthCounter = 0
         self.accs = acs.Accessories()
         self.evaluator = ev.Evaluator(self.board)
+        self.dynamicDepthEnabled = dynamicDepthEnabled
     
     def generateMove(self):
+        self.accs.printInColor("This is a dynamic engine.\n", "p") if self.dynamicDepthEnabled else self.accs.printInColor("This is a non-dynamic engine.\n", "p")
         self.accs.printInColor("Please wait while the Engine is thinking!\n", "g")
+        self.accs.printInColor("Engine depth at: " + str(self.depth) + "\n", "y")
         src = coordinates.Coordinates(-1, -1)
         dest = coordinates.Coordinates(-1, -1)
 
@@ -29,12 +33,25 @@ class Engine:
 
         self.end = time.time()
         self.accs.printInColor("\nPositions Evaluated: " + str(self.posEval) + "\n", "y")
-        self.accs.printInColor("Branches Pruned: " + str(self.branchesPruned) + "\n", "y")
+        self.accs.printInColor("Branches Pruned: " + str(self.branchesPruned) + "\n", "g")
         
         random.shuffle(bestMoves)
         
         self.accs.printInColor("Best score: " + str(bestScore) + "\n", 'g')
         self.accs.printInColor("Think time: " + str(round(self.end - self.start, 2)) + " seconds or " + str(round((self.end - self.start) / 60, 2)) + " minutes\n", 'p')
+        if (self.dynamicDepthEnabled):
+            if (round(self.end - self.start, 2) < 3.0):
+                self.dynamicDepthCounter += 1
+                if self.dynamicDepthCounter > 3:
+                    self.depth += 1
+                    self.accs.printInColor("Increasing depth of engine to " + str(self.depth) + ".\n", "g")
+                    self.dynamicDepthCounter = 0
+            elif (round(self.end - self.start, 2) > 15.0):
+                self.dynamicDepthCounter -= 1
+                if self.dynamicDepthCounter < 0 and self.depth > 1:
+                    self.depth -= 1
+                    self.accs.printInColor("Decreasing depth of engine to " + str(self.depth) + ".\n", "r")
+                    self.dynamicDepthCounter = 0
         try:
             src.x = bestMoves[0][0][0]
             src.y = bestMoves[0][0][1]
